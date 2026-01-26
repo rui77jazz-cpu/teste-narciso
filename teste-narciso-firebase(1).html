@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narciso - Teste de Gramática</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #1F4E78;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        /* Formulário de Login */
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .login-form h2 {
+            color: #2E5090;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Menu de navegação */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2E5090;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #376092;
+            margin: 20px 0 15px 0;
+        }
+
+        .drag-container {
+            background: #f8f9fa;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .draggable {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: move;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .draggable:hover {
+            transform: scale(1.05);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 150px;
+            min-height: 40px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0 5px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+            vertical-align: middle;
+        }
+
+        .drop-zone.drag-over {
+            background: #e3f2fd;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .drop-zone.filled {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 2px solid #667eea;
+            font-weight: bold;
+        }
+
+        .drop-zone.correct {
+            background: #4caf50;
+            border-color: #2e7d32;
+            animation: pulse 0.5s;
+        }
+
+        .drop-zone.incorrect {
+            background: #f44336;
+            border-color: #c62828;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #999 0%, #666 100%);
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .feedback.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .feedback.error {
+            background: #f44336;
+            color: white;
+        }
+
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .score-display h3 {
+            color: #2E5090;
+            margin: 0 0 10px 0;
+        }
+
+        .score-number {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .student-info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .student-info p {
+            margin: 5px 0;
+            color: #2E5090;
+            font-weight: bold;
+        }
+
+        /* Relatório Final */
+        .relatorio-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .relatorio-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .relatorio-header h2 {
+            color: #1F4E78;
+            margin-bottom: 10px;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .performance-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .analysis-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .analysis-section h4 {
+            margin-bottom: 10px;
+        }
+
+        .analysis-section ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .score-display,
+            .student-info {
+                position: static;
+                margin: 10px auto;
+                max-width: 300px;
+            }
+
+            .menu {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .loading:after {
+            content: '...';
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Formulário de Login -->
+        <div id="loginSection" class="section active">
+            <h1>Narciso</h1>
+            <p class="subtitle">Aplicação de Gramática</p>
+            
+            <div class="login-form">
+                <h2>Identificação</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="studentName">Nome Completo:</label>
+                        <input type="text" id="studentName" required placeholder="Digite o teu nome">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentClass">Turma:</label>
+                        <input type="text" id="studentClass" required placeholder="Ex: 4M, 4A, 5B...">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Iniciar Teste</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Informação do Aluno (visível após login) -->
+        <div id="studentInfoDisplay" class="student-info" style="display: none;">
+            <p>👤 <span id="displayName"></span></p>
+            <p>📚 Turma: <span id="displayClass"></span></p>
+        </div>
+
+        <!-- Pontuação (visível após login) -->
+        <div id="scoreDisplay" class="score-display" style="display: none;">
+            <h3>Pontuação</h3>
+            <div class="score-number"><span id="totalScore">0</span>/100</div>
+        </div>
+
+        <!-- Menu Principal -->
+        <div id="menuSection" class="section">
+            <h1>Narciso</h1>
+            <p class="subtitle">Aplicação de Gramática - Escolhe uma atividade</p>
+            
+            <div class="menu">
+                <button class="menu-btn" onclick="showSection('texto')">📖 Leitura do Texto</button>
+                <button class="menu-btn" onclick="showSection('relatorio')">📝 Relatório do Texto</button>
+                <button class="menu-btn" onclick="showSection('graus')">📊 Graus dos Adjetivos</button>
+                <button class="menu-btn" onclick="showSection('conectores')">🔗 Conectores Discursivos</button>
+                <button class="menu-btn" onclick="showSection('flexao')">🔄 Flexão em Género e Número</button>
+                <button class="menu-btn" onclick="showSection('familia')">👨‍👩‍👧‍👦 Família de Palavras</button>
+                <button class="menu-btn" onclick="showSection('frases')">✍️ Escrever Frases</button>
+                <button class="menu-btn" onclick="showSection('conotativos')">💭 Sentidos Conotativos</button>
+                <button class="menu-btn btn-secondary" onclick="finalizarTeste()">✅ Finalizar Teste</button>
+            </div>
+        </div>
+
+        <!-- Secção: Texto -->
+        <div id="texto" class="section">
+            <h2>📖 Leitura do Texto: Narciso</h2>
+            <div class="question">
+                <p style="line-height: 1.8; text-align: justify;">
+                    Há muito, muito tempo, na Grécia Antiga, nasceu um jovem de uma beleza extraordinária. O seu nome era Narciso. A sua mãe, uma ninfa chamada Liríope, muito orgulhosa do filho, quis saber qual seria o seu destino e consultou o velho e sábio profeta Tirésias.<br><br>
+                    — Tirésias, o meu filho é tão belo! Diz-me: terá ele uma vida longa e feliz?<br><br>
+                    O profeta, com um olhar profundo e misterioso, respondeu:<br><br>
+                    — Narciso viverá muitos anos... mas só se nunca se conhecer a si próprio.<br><br>
+                    Liríope não entendeu bem aquelas palavras enigmáticas, mas decidiu não se preocupar. Afinal, o seu filho crescia saudável e cada vez mais belo.<br><br>
+                    À medida que Narciso crescia, a sua beleza tornava-se ainda mais deslumbrante. Todos os que o viam ficavam fascinados. Jovens de toda a Grécia apaixonavam-se por ele, mas Narciso era frio e indiferente. Nenhum deles conseguia conquistar o seu coração.<br><br>
+                    Um dia, enquanto caçava na floresta, Narciso encontrou Eco, uma ninfa gentil e de voz melodiosa. Eco tinha sido castigada pela deusa Hera: já não podia falar livremente, apenas repetir as últimas palavras que ouvia.<br><br>
+                    Ao ver Narciso, Eco apaixonou-se instantaneamente. Tentou aproximar-se dele, mas só conseguia repetir as suas palavras.<br><br>
+                    — Quem está aí? — perguntou Narciso.<br><br>
+                    — Está aí... — respondeu Eco.<br><br>
+                    — Mostra-te! — ordenou ele.<br><br>
+                    — Mostra-te! — repetiu a ninfa.<br><br>
+                    Quando Eco finalmente apareceu e tentou abraçá-lo, Narciso afastou-a com desprezo:<br><br>
+                    — Deixa-me! Prefiro morrer a deixar que me ames!<br><br>
+                    Eco, com o coração despedaçado, fugiu para as montanhas, onde definhava de tristeza até que só restou a sua voz, que ainda hoje ecoa pelos vales.<br><br>
+                    Nêmesis, a deusa da justiça e da vingança, ao ver o sofrimento de Eco e de tantos outros rejeitados por Narciso, decidiu puni-lo. Um dia, depois de uma longa caçada, Narciso encontrou um lago de águas cristalinas. Cansado e com sede, ajoelhou-se para beber.<br><br>
+                    Ao olhar para a água, viu o reflexo de um rosto... e apaixonou-se perdidamente. Não sabia que era a sua própria imagem.<br><br>
+                    — Como és belo! — murmurou, estendendo a mão para tocar o rosto. Mas, ao tocar a água, a imagem desfez-se. Desesperado, esperou que voltasse. E voltou. Tentou beijá-la, mas o mesmo aconteceu.<br><br>
+                    Narciso ficou preso àquele lago, incapaz de se afastar. Passavam os dias e as noites, e ele ali ficava, contemplando o reflexo que nunca poderia abraçar. Deixou de comer, de beber, de dormir. O seu corpo definhava lentamente.<br><br>
+                    — Porque me foges? — perguntava à imagem. — Sei que também me amas! Vejo isso nos teus olhos!<br><br>
+                    Por fim, Narciso compreendeu a terrível verdade: estava apaixonado por si mesmo. Mas já era tarde. Fraco e sem forças, sussurrou as últimas palavras:<br><br>
+                    — Adeus, amor que nunca poderei tocar...<br><br>
+                    E ali, à beira do lago, Narciso faleceu. Quando as ninfas vieram buscar o seu corpo para o enterrar, já não o encontraram. No lugar onde ele estivera, nascera uma flor delicada e branca, com o centro amarelo, inclinada sobre o lago, como se ainda estivesse a contemplar o seu reflexo.<br><br>
+                    Essa flor recebeu o nome de narciso, e até hoje floresce nas margens dos rios e lagos, lembrando a história do jovem que se perdeu ao apaixonar-se por si mesmo.<br><br>
+                    <em>E assim, o profeta Tirésias tinha razão: Narciso não pôde viver muito tempo porque acabou por se conhecer... e ao conhecer-se, perdeu-se.</em>
+                </p>
+            </div>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+        </div>
+
+        <!-- Secção: Relatório do Texto -->
+        <div id="relatorio" class="section">
+            <h2>📝 Relatório do Texto</h2>
+            
+            <div class="question">
+                <p class="question-text"><strong>1.</strong> Quem era Narciso e o que o tornava especial?</p>
+                <textarea id="q1" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>2.</strong> O que disse o profeta Tirésias sobre o destino de Narciso?</p>
+                <textarea id="q2" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>3.</strong> Como Narciso tratava as pessoas que se apaixonavam por ele?</p>
+                <textarea id="q3" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>4.</strong> O que aconteceu a Eco depois de Narciso a rejeitar?</p>
+                <textarea id="q4" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>5.</strong> Qual foi o castigo que Nêmesis aplicou a Narciso?</p>
+                <textarea id="q5" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>6.</strong> O que aconteceu a Narciso no final da história?</p>
+                <textarea id="q6" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>7.</strong> Que lição moral podemos tirar desta história?</p>
+                <textarea id="q7" placeholder="Escreve a tua resposta aqui..."></textarea>
+            </div>
+
+            <button class="btn" onclick="checkRelatorio()">Verificar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="relatorioFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <!-- Secção: Graus dos Adjetivos -->
+        <div id="graus" class="section">
+            <h2>📊 Graus dos Adjetivos</h2>
+            <p style="margin-bottom: 20px;">Arrasta os adjetivos para completar as frases corretamente:</p>
+            
+            <div class="drag-container" id="grausDragContainer">
+                <div class="draggable" draggable="true">mais belo</div>
+                <div class="draggable" draggable="true">belíssimo</div>
+                <div class="draggable" draggable="true">tão frio como</div>
+                <div class="draggable" draggable="true">menos vaidoso</div>
+                <div class="draggable" draggable="true">muito triste</div>
+                <div class="draggable" draggable="true">cristalinas</div>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    1. Narciso era <span class="drop-zone" data-answer="mais belo"></span> do que qualquer outro jovem. (comparativo de superioridade)
+                </p>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    2. Narciso era <span class="drop-zone" data-answer="belíssimo"></span>! (superlativo absoluto sintético)
+                </p>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    3. Narciso era <span class="drop-zone" data-answer="tão frio como"></span> o gelo. (comparativo de igualdade)
+                </p>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    4. Narciso era <span class="drop-zone" data-answer="menos vaidoso"></span> do que devia. (comparativo de inferioridade)
+                </p>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    5. Eco ficou <span class="drop-zone" data-answer="muito triste"></span>. (superlativo absoluto analítico)
+                </p>
+            </div>
+
+            <div class="question">
+                <p class="question-text">
+                    6. As águas eram <span class="drop-zone" data-answer="cristalinas"></span>. (grau normal)
+                </p>
+            </div>
+
+            <button class="btn" onclick="checkGraus()">Verificar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="grausFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <!-- Secção: Conectores -->
+        <div id="conectores" class="section">
+            <h2>🔗 Conectores Discursivos</h2>
+            <p style="margin-bottom: 20px;">Completa as frases com os conectores adequados:</p>
+            
+            <div class="question">
+                <p class="question-text">1. Narciso era belo, <input type="text" id="con1" style="display: inline; width: 150px;"> era vaidoso.</p>
+                <small>(mas / porém / contudo)</small>
+            </div>
+
+            <div class="question">
+                <p class="question-text">2. Eco apaixonou-se por Narciso <input type="text" id="con2" style="display: inline; width: 150px;"> ele a rejeitou.</p>
+                <small>(mas / porém / todavia)</small>
+            </div>
+
+            <div class="question">
+                <p class="question-text">3. <input type="text" id="con3" style="display: inline; width: 150px;"> Narciso viu o seu reflexo, apaixonou-se.</p>
+                <small>(quando / logo que / assim que)</small>
+            </div>
+
+            <div class="question">
+                <p class="question-text">4. Narciso definhava <input type="text" id="con4" style="display: inline; width: 150px;"> não conseguia deixar de olhar para o lago.</p>
+                <small>(porque / pois / uma vez que)</small>
+            </div>
+
+            <div class="question">
+                <p class="question-text">5. <input type="text" id="con5" style="display: inline; width: 150px;">, nasceu uma flor no lugar onde Narciso morreu.</p>
+                <small>(finalmente / por fim / no final)</small>
+            </div>
+
+            <button class="btn" onclick="checkConectores()">Verificar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="conectoresFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <!-- Secção: Flexão -->
+        <div id="flexao" class="section">
+            <h2>🔄 Flexão em Género e Número</h2>
+            
+            <h3>Passa para o feminino:</h3>
+            <div class="question">
+                <p class="question-text">1. O jovem belo → <input type="text" id="fem1"></p>
+            </div>
+            <div class="question">
+                <p class="question-text">2. O deus poderoso → <input type="text" id="fem2"></p>
+            </div>
+            <div class="question">
+                <p class="question-text">3. O profeta sábio → <input type="text" id="fem3"></p>
+            </div>
+
+            <h3>Passa para o plural:</h3>
+            <div class="question">
+                <p class="question-text">4. A ninfa generosa → <input type="text" id="plur1"></p>
+            </div>
+            <div class="question">
+                <p class="question-text">5. O lago transparente → <input type="text" id="plur2"></p>
+            </div>
+            <div class="question">
+                <p class="question-text">6. A flor perfumada → <input type="text" id="plur3"></p>
+            </div>
+
+            <button class="btn" onclick="checkFlexao()">Verificar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="flexaoFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <!-- Secção: Família de Palavras -->
+        <div id="familia" class="section">
+            <h2>👨‍👩‍👧‍👦 Família de Palavras</h2>
+            
+            <div class="question">
+                <p class="question-text"><strong>Família de "belo":</strong></p>
+                <p>1. Escreve um verbo da família de "belo": <input type="text" id="fam1"></p>
+                <p>2. Escreve um adjetivo no superlativo: <input type="text" id="fam2"></p>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>Família de "amor":</strong></p>
+                <p>3. Escreve um verbo da família de "amor": <input type="text" id="fam3"></p>
+                <p>4. Escreve um advérbio: <input type="text" id="fam4"></p>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>Família de "água":</strong></p>
+                <p>5. Escreve uma palavra composta: <input type="text" id="fam5"></p>
+                <p>6. Escreve outra palavra da família: <input type="text" id="fam6"></p>
+            </div>
+
+            <div class="question">
+                <p class="question-text"><strong>Família de "flor":</strong></p>
+                <p>7. Escreve um nome coletivo: <input type="text" id="fam7"></p>
+                <p>8. Escreve um adjetivo: <input type="text" id="fam8"></p>
+            </div>
+
+            <button class="btn" onclick="checkFamilia()">Verificar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="familiaFeedback" class="feedback" style="display: none;"></div>
+        </div>
+
+        <!-- Secção: Escrever Frases -->
+        <div id="frases" class="section">
+            <h2>✍️ Escrever Frases</h2>
+            
+            <div class="question">
+                <p class="question-text">1. Escreve uma frase sobre a beleza de Narciso:</p>
+                <textarea id="frase1" placeholder="A tua frase..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text">2. Escreve uma frase sobre o castigo de Narciso:</p>
+                <textarea id="frase2" placeholder="A tua frase..."></textarea>
+            </div>
+
+            <div class="question">
+                <p class="question-text">3. Escreve uma frase usando um conector de oposição (mas, porém, contudo):</p>
+                <textarea id="frase3" placeholder="A tua frase..."></textarea>
+            </div>
+
+            <button class="btn" onclick="saveFrases()">Guardar Frases</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="frasesFeedback" class="feedback success" style="display: none;">✅ Frases guardadas com sucesso!</div>
+        </div>
+
+        <!-- Secção: Sentidos Conotativos -->
+        <div id="conotativos" class="section">
+            <h2>💭 Sentidos Conotativos</h2>
+            
+            <div class="question">
+                <p class="question-text">Explica o sentido das seguintes expressões do texto:</p>
+                
+                <p><strong>1. "coração de pedra"</strong> (quando se diz que Narciso tinha coração frio)</p>
+                <textarea id="conot1" placeholder="O que significa esta expressão?"></textarea>
+                
+                <p><strong>2. "perdeu-se em si mesmo"</strong></p>
+                <textarea id="conot2" placeholder="O que significa esta expressão?"></textarea>
+                
+                <p><strong>3. "águas cristalinas"</strong></p>
+                <textarea id="conot3" placeholder="O que significa esta expressão?"></textarea>
+            </div>
+
+            <button class="btn" onclick="saveConotativos()">Guardar Respostas</button>
+            <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+            <div id="conotativosFeedback" class="feedback success" style="display: none;">✅ Respostas guardadas com sucesso!</div>
+        </div>
+
+        <!-- Relatório Final -->
+        <div id="relatorioFinal" class="section">
+            <div class="relatorio-container">
+                <div class="relatorio-header">
+                    <h2>📊 Relatório Final</h2>
+                    <h3>Aluno: <span id="reportNome"></span></h3>
+                    <h3>Turma: <span id="reportTurma"></span></h3>
+                    <h3>Data: <span id="reportData"></span></h3>
+                    <p style="font-size: 1.5em; color: #667eea; margin-top: 10px;">
+                        <strong>Pontuação Total: <span id="reportTotalScore">0</span>/100</strong>
+                    </p>
+                </div>
+
+                <h3>Desempenho por Secção:</h3>
+                <table class="performance-table">
+                    <thead>
+                        <tr>
+                            <th>Secção</th>
+                            <th>Pontuação</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>📝 Relatório do Texto</td>
+                            <td id="reportRelatorio">-</td>
+                            <td id="statusRelatorio">-</td>
+                        </tr>
+                        <tr>
+                            <td>📊 Graus dos Adjetivos</td>
+                            <td id="reportGraus">-</td>
+                            <td id="statusGraus">-</td>
+                        </tr>
+                        <tr>
+                            <td>🔗 Conectores Discursivos</td>
+                            <td id="reportConectores">-</td>
+                            <td id="statusConectores">-</td>
+                        </tr>
+                        <tr>
+                            <td>🔄 Flexão em Género e Número</td>
+                            <td id="reportFlexao">-</td>
+                            <td id="statusFlexao">-</td>
+                        </tr>
+                        <tr>
+                            <td>👨‍👩‍👧‍👦 Família de Palavras</td>
+                            <td id="reportFamilia">-</td>
+                            <td id="statusFamilia">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="analysis-section">
+                    <div id="pontosFortes"></div>
+                    <div id="areasmelhorar"></div>
+                    <div id="comentarioFinal"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="enviarResultados()">📤 Enviar Resultados ao Professor</button>
+                    <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
+                </div>
+                
+                <div id="envioFeedback" class="feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        // ===== CONFIGURAÇÃO DO FIREBASE =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyCKn6YGp4LnSTA4impkHSy5oKuljzosbNc",
+            authDomain: "narciso-gramatica.firebaseapp.com",
+            databaseURL: "https://narciso-gramatica-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "narciso-gramatica",
+            storageBucket: "narciso-gramatica.firebasestorage.app",
+            messagingSenderId: "911157010213",
+            appId: "1:911157010213:web:7c3e9be440a09fbbe144cc"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Dados do aluno
+        let studentData = {
+            name: '',
+            class: '',
+            startTime: null,
+            sessionId: null
+        };
+
+        // Pontuação
+        let totalScore = 0;
+        let sectionScores = {
+            relatorio: 0,
+            graus: 0,
+            conectores: 0,
+            flexao: 0,
+            familia: 0
+        };
+
+        // Respostas do aluno
+        let studentAnswers = {
+            relatorio: {},
+            graus: {},
+            conectores: {},
+            flexao: {},
+            familia: {},
+            frases: {},
+            conotativos: {}
+        };
+
+        // ===== GESTÃO DE LOGIN =====
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value;
+            
+            if (name && studentClass) {
+                studentData.name = name;
+                studentData.class = studentClass;
+                studentData.startTime = new Date().toISOString();
+                studentData.sessionId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Mostrar informação do aluno
+                document.getElementById('displayName').textContent = name;
+                document.getElementById('displayClass').textContent = studentClass;
+                document.getElementById('studentInfoDisplay').style.display = 'block';
+                document.getElementById('scoreDisplay').style.display = 'block';
+                
+                // Ir para o menu
+                showSection('menuSection');
+            }
+        });
+
+        // ===== NAVEGAÇÃO =====
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Scroll para o topo
+            window.scrollTo(0, 0);
+        }
+
+        // ===== SISTEMA DE DRAG AND DROP =====
+        function setupDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    
+                    const draggable = document.querySelector('.dragging');
+                    if (draggable && !zone.classList.contains('filled')) {
+                        zone.textContent = draggable.textContent;
+                        zone.classList.add('filled');
+                        draggable.remove();
+                    }
+                });
+            });
+        }
+
+        // Inicializar drag and drop quando a página carrega
+        window.addEventListener('load', setupDragAndDrop);
+
+        // ===== VERIFICAÇÃO DAS RESPOSTAS =====
+
+        // Verificação do Relatório
+        function checkRelatorio() {
+            const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'];
+            let answered = 0;
+            
+            questions.forEach(id => {
+                const value = document.getElementById(id).value.trim();
+                studentAnswers.relatorio[id] = value;
+                if (value.length > 10) answered++;
+            });
+
+            const feedback = document.getElementById('relatorioFeedback');
+            const score = Math.round((answered / questions.length) * 100);
+            sectionScores.relatorio = score;
+            
+            if (answered === questions.length) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `✅ Parabéns! Respondeste a todas as perguntas! Pontuação: ${score}/100`;
+                updateScore(20);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `Respondeste ${answered} de ${questions.length} perguntas. Pontuação: ${score}/100`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Verificação dos Graus
+        function checkGraus() {
+            const dropZones = document.querySelectorAll('#graus .drop-zone');
+            let correct = 0;
+            let total = dropZones.length;
+
+            dropZones.forEach(zone => {
+                const answer = zone.dataset.answer;
+                const value = zone.textContent.trim();
+                
+                studentAnswers.graus[answer] = value;
+                
+                if (value === answer) {
+                    zone.classList.add('correct');
+                    zone.classList.remove('incorrect');
+                    correct++;
+                } else if (value !== '') {
+                    zone.classList.add('incorrect');
+                    zone.classList.remove('correct');
+                }
+            });
+
+            const feedback = document.getElementById('grausFeedback');
+            const score = Math.round((correct / total) * 100);
+            sectionScores.graus = score;
+            
+            if (correct === total) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `🎉 Perfeito! Acertaste todos! Pontuação: ${score}/100`;
+                updateScore(15);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `Acertaste ${correct} de ${total}. Tenta novamente! Pontuação: ${score}/100`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Verificação dos Conectores
+        function checkConectores() {
+            const answers = {
+                con1: ['mas', 'porém', 'contudo', 'todavia'],
+                con2: ['mas', 'porém', 'todavia', 'contudo'],
+                con3: ['quando', 'logo que', 'assim que'],
+                con4: ['porque', 'pois', 'uma vez que'],
+                con5: ['finalmente', 'por fim', 'no final', 'enfim']
+            };
+
+            let correct = 0;
+            let total = Object.keys(answers).length;
+
+            for (let id in answers) {
+                const input = document.getElementById(id);
+                const value = input.value.trim().toLowerCase();
+                studentAnswers.conectores[id] = value;
+                
+                if (answers[id].includes(value)) {
+                    input.style.borderColor = '#4caf50';
+                    correct++;
+                } else if (value !== '') {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+
+            const feedback = document.getElementById('conectoresFeedback');
+            const score = Math.round((correct / total) * 100);
+            sectionScores.conectores = score;
+            
+            if (correct === total) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `🎉 Excelente! Conheces bem os conectores! Pontuação: ${score}/100`;
+                updateScore(15);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `Acertaste ${correct} de ${total}. Revê os conectores! Pontuação: ${score}/100`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Verificação da Flexão
+        function checkFlexao() {
+            const answers = {
+                fem1: ['a jovem bela', 'jovem bela'],
+                fem2: ['a deusa poderosa', 'deusa poderosa'],
+                fem3: ['a profetisa sábia', 'profetisa sábia'],
+                plur1: ['as ninfas generosas', 'ninfas generosas'],
+                plur2: ['os lagos transparentes', 'lagos transparentes'],
+                plur3: ['as flores perfumadas', 'flores perfumadas']
+            };
+
+            let correct = 0;
+            let total = Object.keys(answers).length;
+
+            for (let id in answers) {
+                const input = document.getElementById(id);
+                const value = input.value.trim().toLowerCase();
+                studentAnswers.flexao[id] = value;
+                
+                if (answers[id].some(answer => value === answer.toLowerCase())) {
+                    input.style.borderColor = '#4caf50';
+                    correct++;
+                } else if (value !== '') {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+
+            const feedback = document.getElementById('flexaoFeedback');
+            const score = Math.round((correct / total) * 100);
+            sectionScores.flexao = score;
+            
+            if (correct === total) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `🎉 Perfeito! Conheces muito bem a flexão! Pontuação: ${score}/100`;
+                updateScore(15);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `Acertaste ${correct} de ${total}. Revê as regras! Pontuação: ${score}/100`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Verificação da Família de Palavras
+        function checkFamilia() {
+            const answers = {
+                fam1: ['embelezar', 'embelezamento', 'aformosear'],
+                fam2: ['belíssimo', 'beleza', 'formoso'],
+                fam3: ['apaixonar', 'amar', 'enamorar'],
+                fam4: ['amorosamente', 'apaixonado', 'amado'],
+                fam5: ['aguaceiro', 'aguarela', 'aquoso'],
+                fam6: ['aguarela', 'aguaceiro', 'aquário'],
+                fam7: ['floresta', 'florido', 'florescer'],
+                fam8: ['florido', 'floresta', 'floral']
+            };
+
+            let correct = 0;
+            let total = Object.keys(answers).length;
+
+            for (let id in answers) {
+                const input = document.getElementById(id);
+                const value = input.value.trim().toLowerCase();
+                studentAnswers.familia[id] = value;
+                
+                if (answers[id].some(answer => value.includes(answer.toLowerCase()))) {
+                    input.style.borderColor = '#4caf50';
+                    correct++;
+                } else if (value !== '') {
+                    input.style.borderColor = '#f44336';
+                }
+            }
+
+            const feedback = document.getElementById('familiaFeedback');
+            const score = Math.round((correct / total) * 100);
+            sectionScores.familia = score;
+            
+            if (correct >= total * 0.75) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `🎉 Muito bem! Conheces bem as famílias de palavras! Pontuação: ${score}/100`;
+                updateScore(15);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `Acertaste ${correct} de ${total}. Pensa em mais palavras! Pontuação: ${score}/100`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Guardar Frases
+        function saveFrases() {
+            studentAnswers.frases = {
+                frase1: document.getElementById('frase1').value,
+                frase2: document.getElementById('frase2').value,
+                frase3: document.getElementById('frase3').value
+            };
+            
+            const feedback = document.getElementById('frasesFeedback');
+            feedback.style.display = 'block';
+            updateScore(10);
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+
+        // Guardar Conotativos
+        function saveConotativos() {
+            studentAnswers.conotativos = {
+                conot1: document.getElementById('conot1').value,
+                conot2: document.getElementById('conot2').value,
+                conot3: document.getElementById('conot3').value
+            };
+            
+            const feedback = document.getElementById('conotativosFeedback');
+            feedback.style.display = 'block';
+            updateScore(10);
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+
+        // Atualizar pontuação
+        function updateScore(points) {
+            totalScore += points;
+            if (totalScore > 100) totalScore = 100;
+            document.getElementById('totalScore').textContent = totalScore;
+        }
+
+        // ===== RELATÓRIO FINAL =====
+        function finalizarTeste() {
+            showSection('relatorioFinal');
+            
+            // Atualizar cabeçalho
+            document.getElementById('reportNome').textContent = studentData.name;
+            document.getElementById('reportTurma').textContent = studentData.class;
+            document.getElementById('reportData').textContent = new Date().toLocaleDateString('pt-PT');
+            document.getElementById('reportTotalScore').textContent = totalScore;
+            
+            // Atualizar tabela de desempenho
+            updateReportTable();
+            
+            // Análise do desempenho
+            analyzePerformance();
+        }
+
+        function updateReportTable() {
+            const sections = ['relatorio', 'graus', 'conectores', 'flexao', 'familia'];
+            
+            sections.forEach(section => {
+                const score = sectionScores[section];
+                const scoreCell = document.getElementById('report' + section.charAt(0).toUpperCase() + section.slice(1));
+                const statusCell = document.getElementById('status' + section.charAt(0).toUpperCase() + section.slice(1));
+                
+                scoreCell.textContent = score > 0 ? score + '/100' : '-';
+                
+                if (score >= 70) {
+                    statusCell.textContent = '✓ Bom';
+                    statusCell.style.color = '#4caf50';
+                } else if (score > 0) {
+                    statusCell.textContent = '⚠ A melhorar';
+                    statusCell.style.color = '#ff9800';
+                } else {
+                    statusCell.textContent = '-';
+                    statusCell.style.color = '#666';
+                }
+            });
+        }
+
+        function analyzePerformance() {
+            let pontosFortes = [];
+            let areasmelhorar = [];
+            
+            const sectionNames = {
+                relatorio: 'Relatório do Texto',
+                graus: 'Graus dos Adjetivos',
+                conectores: 'Conectores Discursivos',
+                flexao: 'Flexão em Género e Número',
+                familia: 'Família de Palavras'
+            };
+            
+            for (let section in sectionScores) {
+                if (sectionScores[section] >= 70) {
+                    pontosFortes.push(sectionNames[section]);
+                } else if (sectionScores[section] > 0) {
+                    areasmelhorar.push(sectionNames[section]);
+                }
+            }
+            
+            // Mostrar pontos fortes
+            let htmlFortes = '<h4 style="color: #4caf50; margin-top: 15px;">✅ Pontos Fortes:</h4><ul style="margin-left: 20px;">';
+            if (pontosFortes.length > 0) {
+                pontosFortes.forEach(p => htmlFortes += `<li>${p}</li>`);
+            } else {
+                htmlFortes += '<li>Continua a praticar para melhorar!</li>';
+            }
+            htmlFortes += '</ul>';
+            document.getElementById('pontosFortes').innerHTML = htmlFortes;
+            
+            // Mostrar áreas a melhorar
+            let htmlMelhorar = '<h4 style="color: #ff9800; margin-top: 15px;">📚 Áreas a Melhorar:</h4><ul style="margin-left: 20px;">';
+            if (areasmelhorar.length > 0) {
+                areasmelhorar.forEach(a => htmlMelhorar += `<li>${a}</li>`);
+            } else {
+                htmlMelhorar += '<li>Parabéns! Demonstraste bom domínio em todas as áreas!</li>';
+            }
+            htmlMelhorar += '</ul>';
+            document.getElementById('areasmelhorar').innerHTML = htmlMelhorar;
+            
+            // Comentário final
+            let comentario = '';
+            if (totalScore >= 80) {
+                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Excelente trabalho! Demonstraste um domínio muito bom dos conteúdos gramaticais. Continua assim! 🌟</p>';
+            } else if (totalScore >= 60) {
+                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Bom trabalho! Tens um bom conhecimento dos conteúdos. Continua a praticar as áreas que ainda precisam de reforço. 💪</p>';
+            } else if (totalScore >= 40) {
+                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Fizeste um esforço! Algumas áreas precisam de mais atenção. Não desistas, com prática vais melhorar! 📖</p>';
+            } else {
+                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Precisas de praticar mais estes conteúdos. Pede ajuda ao professor e dedica mais tempo ao estudo. Vais conseguir! 💡</p>';
+            }
+            document.getElementById('comentarioFinal').innerHTML = comentario;
+        }
+
+        // ===== ENVIAR RESULTADOS PARA FIREBASE =====
+        function enviarResultados() {
+            const feedback = document.getElementById('envioFeedback');
+            feedback.style.display = 'block';
+            feedback.className = 'feedback';
+            feedback.innerHTML = '<div class="loading">A enviar resultados</div>';
+            
+            const resultData = {
+                aluno: {
+                    nome: studentData.name,
+                    turma: studentData.class,
+                    sessionId: studentData.sessionId,
+                    dataInicio: studentData.startTime,
+                    dataFim: new Date().toISOString()
+                },
+                pontuacoes: {
+                    total: totalScore,
+                    porSeccao: sectionScores
+                },
+                respostas: studentAnswers,
+                analise: {
+                    pontosFortes: [],
+                    areasmelhorar: []
+                }
+            };
+            
+            // Adicionar análise
+            const sectionNames = {
+                relatorio: 'Relatório do Texto',
+                graus: 'Graus dos Adjetivos',
+                conectores: 'Conectores Discursivos',
+                flexao: 'Flexão em Género e Número',
+                familia: 'Família de Palavras'
+            };
+            
+            for (let section in sectionScores) {
+                if (sectionScores[section] >= 70) {
+                    resultData.analise.pontosFortes.push(sectionNames[section]);
+                } else if (sectionScores[section] > 0) {
+                    resultData.analise.areasmelhorar.push(sectionNames[section]);
+                }
+            }
+            
+            // Enviar para Firebase
+            const testesRef = database.ref('testes-narciso');
+            const novoTesteRef = testesRef.push();
+            
+            novoTesteRef.set(resultData)
+                .then(() => {
+                    feedback.className = 'feedback success';
+                    feedback.textContent = '✅ Resultados enviados com sucesso! O teu professor já pode ver o teu trabalho.';
+                })
+                .catch((error) => {
+                    feedback.className = 'feedback error';
+                    feedback.textContent = '❌ Erro ao enviar resultados: ' + error.message;
+                    console.error('Erro:', error);
+                });
+        }
+    </script>
+</body>
+</html>
