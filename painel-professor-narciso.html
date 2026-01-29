@@ -214,7 +214,7 @@
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 900px;
+            max-width: 1000px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -483,6 +483,18 @@
         let todosResultados = [];
         let resultadosFiltrados = [];
 
+        // Verificar ao carregar
+        window.addEventListener('load', function() {
+            console.log('✅ Painel carregado!');
+            const modal = document.getElementById('detailModal');
+            if (!modal) {
+                console.error('❌ Modal não encontrado!');
+            } else {
+                console.log('✅ Modal encontrado!');
+            }
+            carregarResultados();
+        });
+
         // ===== CARREGAR DADOS =====
         function carregarResultados() {
             const testesRef = database.ref('testes-narciso');
@@ -601,21 +613,52 @@
             return 'score-poor';
         }
 
-        // ===== MOSTRAR DETALHES =====
+        // ===== FUNÇÃO AUXILIAR: CALCULAR TEMPO =====
+        function calcularTempo(inicio, fim) {
+            const diff = new Date(fim) - new Date(inicio);
+            const minutos = Math.floor(diff / 60000);
+            const segundos = Math.floor((diff % 60000) / 1000);
+            return `${minutos}m ${segundos}s`;
+        }
+
+        // ===== MOSTRAR DETALHES - VERSÃO COMPLETA =====
         function mostrarDetalhes(resultado) {
+            console.log('🔍 Abrindo detalhes de:', resultado.aluno.nome);
+            
             const modal = document.getElementById('detailModal');
             const content = document.getElementById('modalContent');
+            
+            if (!modal || !content) {
+                alert('❌ Erro: Modal não encontrado! Recarrega a página.');
+                return;
+            }
+
+            const tempoTotal = calcularTempo(resultado.aluno.dataInicio, resultado.aluno.dataFim);
 
             let html = `
-                <h2>📋 Detalhes do Teste - ${resultado.aluno.nome}</h2>
+                <h2>📋 Prova Completa - ${resultado.aluno.nome}</h2>
                 
-                <div class="detail-section">
+                <div class="detail-section" style="background: #e3f2fd;">
                     <h3>👤 Informações do Aluno</h3>
                     <p><strong>Nome:</strong> ${resultado.aluno.nome}</p>
                     <p><strong>Turma:</strong> ${resultado.aluno.turma}</p>
-                    <p><strong>Data de Início:</strong> ${new Date(resultado.aluno.dataInicio).toLocaleString('pt-PT')}</p>
-                    <p><strong>Data de Conclusão:</strong> ${new Date(resultado.aluno.dataFim).toLocaleString('pt-PT')}</p>
-                    <p><strong>Pontuação Total:</strong> <span class="score-badge ${getScoreClass(resultado.pontuacoes.total)}">${resultado.pontuacoes.total}/100</span></p>
+                    <p><strong>Data:</strong> ${new Date(resultado.aluno.dataFim).toLocaleDateString('pt-PT')}</p>
+                    <p><strong>Hora:</strong> ${new Date(resultado.aluno.dataFim).toLocaleTimeString('pt-PT')}</p>
+                    <p><strong>Tempo de Teste:</strong> ${tempoTotal}</p>
+                    <p><strong>Pontuação Automática:</strong> <span class="score-badge ${getScoreClass(resultado.pontuacoes.total)}">${resultado.pontuacoes.total}/100</span></p>
+                </div>
+
+                <div class="detail-section" style="background: #fff3cd; border-left: 5px solid #ffc107;">
+                    <h3 style="color: #856404;">⚠️ ATENÇÃO PROFESSOR</h3>
+                    <p style="color: #856404; margin-bottom: 10px;">
+                        <strong>Esta é a prova COMPLETA do aluno para avaliação manual.</strong>
+                    </p>
+                    <ul style="color: #856404; margin-left: 20px;">
+                        <li>✅ Verde = Resposta CORRETA (avaliação automática)</li>
+                        <li>❌ Vermelho = Resposta INCORRETA ou não respondida</li>
+                        <li>📝 IMPORTANTE: Respostas abertas (relatório, frases) precisam da TUA avaliação!</li>
+                        <li>💬 Usa este ecrã para dar feedback personalizado ao aluno</li>
+                    </ul>
                 </div>
 
                 <div class="detail-section">
@@ -643,13 +686,19 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="detail-section">
-                    <h3>📝 Respostas do Relatório</h3>
             `;
 
-            // Adicionar respostas do relatório
-            if (resultado.respostas.relatorio) {
+            // ========== RELATÓRIO DO TEXTO ==========
+            html += `
+                <div class="detail-section" style="border: 3px solid #f44336;">
+                    <h3 style="color: #f44336;">📝 RELATÓRIO DO TEXTO - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
+                    <p style="background: #ffebee; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        <strong>⚠️ Estas respostas são ABERTAS e precisam da tua avaliação manual!</strong><br>
+                        Lê cada resposta e avalia se está completa, correta e demonstra compreensão.
+                    </p>
+            `;
+
+            if (resultado.respostas && resultado.respostas.relatorio) {
                 const perguntas = {
                     q1: '1. Quem era Narciso e o que o tornava especial?',
                     q2: '2. O que disse o profeta Tirésias sobre o destino de Narciso?',
@@ -661,249 +710,308 @@
                 };
 
                 for (let q in perguntas) {
-                    if (resultado.respostas.relatorio[q]) {
-                        html += `
-                            <div class="answer-item">
-                                <strong>${perguntas[q]}</strong>
-                                <p>${resultado.respostas.relatorio[q]}</p>
-                            </div>
-                        `;
-                    }
-                }
-            }
-            html += `</div>`;
-
-            // Adicionar respostas dos Graus dos Adjetivos
-            if (resultado.respostas.graus && Object.keys(resultado.respostas.graus).length > 0) {
-                html += `
-                    <div class="detail-section">
-                        <h3>📊 Graus dos Adjetivos (Drag & Drop)</h3>
-                `;
-                
-                const respostasGraus = resultado.respostas.graus;
-                const perguntasGraus = {
-                    'mais belo': 'Narciso era _____ do que qualquer outro jovem. (comparativo de superioridade)',
-                    'belíssimo': 'Narciso era _____! (superlativo absoluto sintético)',
-                    'tão frio como': 'Narciso era _____ o gelo. (comparativo de igualdade)',
-                    'menos vaidoso': 'Narciso era _____ do que devia. (comparativo de inferioridade)',
-                    'muito triste': 'Eco ficou _____. (superlativo absoluto analítico)',
-                    'cristalinas': 'As águas eram _____. (grau normal)'
-                };
-                
-                for (let resposta in respostasGraus) {
-                    const valor = respostasGraus[resposta];
-                    const pergunta = perguntasGraus[resposta] || `Resposta esperada: ${resposta}`;
-                    const correto = valor === resposta ? '✅' : '❌';
-                    html += `
-                        <div class="answer-item">
-                            <strong>${correto} ${pergunta}</strong>
-                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
-                            ${valor !== resposta ? `<p style="color: #4caf50;">Resposta correta: <strong>${resposta}</strong></p>` : ''}
-                        </div>
-                    `;
-                }
-                
-                html += `</div>`;
-            }
-
-            // Adicionar respostas dos Conectores
-            if (resultado.respostas.conectores && Object.keys(resultado.respostas.conectores).length > 0) {
-                html += `
-                    <div class="detail-section">
-                        <h3>🔗 Conectores Discursivos</h3>
-                `;
-                
-                const respostasConectores = resultado.respostas.conectores;
-                const perguntasConectores = {
-                    con1: 'Narciso era belo, _____ era vaidoso.',
-                    con2: 'Eco apaixonou-se por Narciso _____ ele a rejeitou.',
-                    con3: '_____ Narciso viu o seu reflexo, apaixonou-se.',
-                    con4: 'Narciso definhava _____ não conseguia deixar de olhar para o lago.',
-                    con5: '_____, nasceu uma flor no lugar onde Narciso morreu.'
-                };
-                
-                const respostasCorretas = {
-                    con1: 'mas / porém / contudo / todavia',
-                    con2: 'mas / porém / todavia / contudo',
-                    con3: 'quando / logo que / assim que',
-                    con4: 'porque / pois / uma vez que',
-                    con5: 'finalmente / por fim / no final / enfim'
-                };
-                
-                for (let id in respostasConectores) {
-                    const valor = respostasConectores[id];
-                    const pergunta = perguntasConectores[id];
-                    const corretas = respostasCorretas[id];
+                    const resposta = resultado.respostas.relatorio[q] || '';
+                    const temResposta = resposta.trim().length > 0;
+                    const numPalavras = resposta.trim().split(/\s+/).filter(p => p.length > 0).length;
+                    const numCaracteres = resposta.length;
                     
                     html += `
-                        <div class="answer-item">
-                            <strong>${pergunta}</strong>
-                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
-                            <p style="color: #666;">Respostas aceites: ${corretas}</p>
+                        <div class="answer-item" style="border-left: 5px solid ${temResposta ? '#2196f3' : '#f44336'}; background: ${temResposta ? '#e3f2fd' : '#ffebee'};">
+                            <strong style="font-size: 1.1em; color: #1976d2;">${perguntas[q]}</strong>
+                            
+                            ${temResposta ? `
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #2196f3;">
+                                    <p style="font-size: 1.05em; line-height: 1.6; color: #333; white-space: pre-wrap;">${resposta}</p>
+                                </div>
+                                
+                                <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 0.9em; color: #666;">
+                                    <span>📊 <strong>${numPalavras}</strong> palavras</span>
+                                    <span>📝 <strong>${numCaracteres}</strong> caracteres</span>
+                                </div>
+                                
+                                <div style="background: #fff9c4; padding: 10px; border-radius: 5px; margin-top: 10px; border-left: 4px solid #fbc02d;">
+                                    <strong style="color: #f57c00;">📋 Para avaliar:</strong>
+                                    <p style="margin-top: 5px; color: #666; font-size: 0.95em;">
+                                        □ Completa  □ Correta  □ Demonstra compreensão  □ Vocabulário adequado
+                                    </p>
+                                </div>
+                            ` : `
+                                <div style="background: #ffcdd2; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                                    <p style="color: #c62828; font-weight: bold;">❌ NÃO RESPONDEU</p>
+                                </div>
+                            `}
                         </div>
                     `;
                 }
-                
-                html += `</div>`;
             }
+            html += '</div>';
 
-            // Adicionar respostas da Flexão
-            if (resultado.respostas.flexao && Object.keys(resultado.respostas.flexao).length > 0) {
-                html += `
-                    <div class="detail-section">
-                        <h3>🔄 Flexão em Género e Número</h3>
-                `;
-                
-                const respostasFlexao = resultado.respostas.flexao;
-                const perguntasFlexao = {
-                    fem1: 'O jovem belo → (feminino)',
-                    fem2: 'O deus poderoso → (feminino)',
-                    fem3: 'O profeta sábio → (feminino)',
-                    plur1: 'A ninfa generosa → (plural)',
-                    plur2: 'O lago transparente → (plural)',
-                    plur3: 'A flor perfumada → (plural)'
-                };
-                
-                const respostasCorretas = {
-                    fem1: 'a jovem bela / jovem bela',
-                    fem2: 'a deusa poderosa / deusa poderosa',
-                    fem3: 'a profetisa sábia / profetisa sábia',
-                    plur1: 'as ninfas generosas / ninfas generosas',
-                    plur2: 'os lagos transparentes / lagos transparentes',
-                    plur3: 'as flores perfumadas / flores perfumadas'
-                };
-                
-                for (let id in respostasFlexao) {
-                    const valor = respostasFlexao[id];
-                    const pergunta = perguntasFlexao[id];
-                    const corretas = respostasCorretas[id];
-                    
-                    html += `
-                        <div class="answer-item">
-                            <strong>${pergunta}</strong>
-                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
-                            <p style="color: #666;">Respostas aceites: ${corretas}</p>
-                        </div>
-                    `;
-                }
-                
-                html += `</div>`;
-            }
-
-            // Adicionar respostas da Família de Palavras
-            if (resultado.respostas.familia && Object.keys(resultado.respostas.familia).length > 0) {
-                html += `
-                    <div class="detail-section">
-                        <h3>👨‍👩‍👧‍👦 Família de Palavras</h3>
-                `;
-                
-                const respostasFamilia = resultado.respostas.familia;
-                const perguntasFamilia = {
-                    fam1: 'Família de "belo" - Verbo:',
-                    fam2: 'Família de "belo" - Adjetivo no superlativo:',
-                    fam3: 'Família de "amor" - Verbo:',
-                    fam4: 'Família de "amor" - Advérbio:',
-                    fam5: 'Família de "água" - Palavra composta:',
-                    fam6: 'Família de "água" - Outra palavra:',
-                    fam7: 'Família de "flor" - Nome coletivo:',
-                    fam8: 'Família de "flor" - Adjetivo:'
-                };
-                
-                const exemploCorretos = {
-                    fam1: 'embelezar, embelezamento, aformosear',
-                    fam2: 'belíssimo, beleza, formoso',
-                    fam3: 'apaixonar, amar, enamorar',
-                    fam4: 'amorosamente, apaixonado, amado',
-                    fam5: 'aguaceiro, aguarela, aquoso',
-                    fam6: 'aguarela, aguaceiro, aquário',
-                    fam7: 'floresta, florido, florescer',
-                    fam8: 'florido, floresta, floral'
-                };
-                
-                for (let id in respostasFamilia) {
-                    const valor = respostasFamilia[id];
-                    const pergunta = perguntasFamilia[id];
-                    const exemplos = exemploCorretos[id];
-                    
-                    html += `
-                        <div class="answer-item">
-                            <strong>${pergunta}</strong>
-                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
-                            <p style="color: #666;">Exemplos de respostas corretas: ${exemplos}</p>
-                        </div>
-                    `;
-                }
-                
-                html += `</div>`;
-            }
-
-            // Adicionar frases criativas
-            if (resultado.respostas.frases) {
-                html += `
-                    <div class="detail-section">
-                        <h3>✍️ Frases Criadas</h3>
-                        <div class="answer-item">
-                            <strong>Sobre a beleza de Narciso:</strong>
-                            <p>${resultado.respostas.frases.frase1 || '-'}</p>
-                        </div>
-                        <div class="answer-item">
-                            <strong>Sobre o castigo:</strong>
-                            <p>${resultado.respostas.frases.frase2 || '-'}</p>
-                        </div>
-                        <div class="answer-item">
-                            <strong>Com conector de oposição:</strong>
-                            <p>${resultado.respostas.frases.frase3 || '-'}</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Adicionar sentidos conotativos
-            if (resultado.respostas.conotativos) {
-                html += `
-                    <div class="detail-section">
-                        <h3>💭 Sentidos Conotativos</h3>
-                        <div class="answer-item">
-                            <strong>"Coração de pedra":</strong>
-                            <p>${resultado.respostas.conotativos.conot1 || '-'}</p>
-                        </div>
-                        <div class="answer-item">
-                            <strong>"Perdeu-se em si mesmo":</strong>
-                            <p>${resultado.respostas.conotativos.conot2 || '-'}</p>
-                        </div>
-                        <div class="answer-item">
-                            <strong>"Águas cristalinas":</strong>
-                            <p>${resultado.respostas.conotativos.conot3 || '-'}</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Adicionar análise
+            // ========== GRAUS DOS ADJETIVOS ==========
             html += `
                 <div class="detail-section">
-                    <h3>📈 Análise de Desempenho</h3>
-                    ${resultado.analise.pontosFortes.length > 0 ? `
-                        <h4 style="color: #4caf50;">✅ Pontos Fortes:</h4>
-                        <ul>
-                            ${resultado.analise.pontosFortes.map(p => `<li>${p}</li>`).join('')}
-                        </ul>
-                    ` : ''}
-                    ${resultado.analise.areasmelhorar.length > 0 ? `
-                        <h4 style="color: #ff9800;">📚 Áreas a Melhorar:</h4>
-                        <ul>
-                            ${resultado.analise.areasmelhorar.map(a => `<li>${a}</li>`).join('')}
-                        </ul>
-                    ` : ''}
-                </div>
+                    <h3>📊 Graus dos Adjetivos (Avaliação Automática)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.graus || 0}/100</strong></p>
             `;
+
+            if (resultado.respostas && resultado.respostas.graus) {
+                const respostasCorretas = {
+                    'mais belo': '(comparativo de superioridade)',
+                    'belíssimo': '(superlativo absoluto sintético)',
+                    'tão frio como': '(comparativo de igualdade)',
+                    'menos vaidoso': '(comparativo de inferioridade)',
+                    'muito triste': '(superlativo absoluto analítico)',
+                    'cristalinas': '(grau normal)'
+                };
+
+                for (let correto in respostasCorretas) {
+                    const respostaAluno = resultado.respostas.graus[correto] || '';
+                    const acertou = respostaAluno.toLowerCase() === correto.toLowerCase();
+                    
+                    html += `
+                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
+                            <strong>${acertou ? '✅' : '❌'} ${correto} ${respostasCorretas[correto]}</strong>
+                            <p style="margin-top: 8px;">
+                                <strong>Resposta do aluno:</strong> 
+                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
+                                    ${respostaAluno || '(não respondeu)'}
+                                </span>
+                            </p>
+                            ${!acertou ? `
+                                <div style="background: #fff3e0; padding: 8px; border-radius: 5px; margin-top: 8px;">
+                                    <strong style="color: #e65100;">Correta:</strong> ${correto}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            }
+            html += '</div>';
+
+            // ========== CONECTORES ==========
+            html += `
+                <div class="detail-section">
+                    <h3>🔗 Conectores Discursivos (Avaliação Automática)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.conectores || 0}/100</strong></p>
+            `;
+
+            if (resultado.respostas && resultado.respostas.conectores) {
+                const questoes = {
+                    con1: { frase: 'Narciso era belo, _____ era vaidoso.', aceitas: ['mas', 'porém', 'contudo', 'todavia'] },
+                    con2: { frase: 'Eco apaixonou-se por Narciso _____ ele a rejeitou.', aceitas: ['mas', 'porém', 'todavia', 'contudo'] },
+                    con3: { frase: '_____ Narciso viu o seu reflexo, apaixonou-se.', aceitas: ['quando', 'logo que', 'assim que'] },
+                    con4: { frase: 'Narciso definhava _____ não conseguia deixar de olhar para o lago.', aceitas: ['porque', 'pois', 'uma vez que'] },
+                    con5: { frase: '_____, nasceu uma flor no lugar onde Narciso morreu.', aceitas: ['finalmente', 'por fim', 'no final', 'enfim'] }
+                };
+
+                for (let id in questoes) {
+                    const resposta = resultado.respostas.conectores[id] || '';
+                    const acertou = questoes[id].aceitas.some(a => a.toLowerCase() === resposta.toLowerCase());
+                    
+                    html += `
+                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
+                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].frase}</strong>
+                            <p style="margin-top: 8px;">
+                                <strong>Resposta:</strong> 
+                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
+                                    ${resposta || '(não respondeu)'}
+                                </span>
+                            </p>
+                            <div style="background: #e3f2fd; padding: 8px; border-radius: 5px; margin-top: 8px;">
+                                <strong>Aceites:</strong> ${questoes[id].aceitas.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            html += '</div>';
+
+            // ========== FLEXÃO ==========
+            html += `
+                <div class="detail-section">
+                    <h3>🔄 Flexão em Género e Número (Avaliação Automática)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.flexao || 0}/100</strong></p>
+            `;
+
+            if (resultado.respostas && resultado.respostas.flexao) {
+                const questoes = {
+                    fem1: { original: 'O jovem belo → feminino', aceitas: ['a jovem bela', 'jovem bela'] },
+                    fem2: { original: 'O deus poderoso → feminino', aceitas: ['a deusa poderosa', 'deusa poderosa'] },
+                    fem3: { original: 'O profeta sábio → feminino', aceitas: ['a profetisa sábia', 'profetisa sábia'] },
+                    plur1: { original: 'A ninfa generosa → plural', aceitas: ['as ninfas generosas', 'ninfas generosas'] },
+                    plur2: { original: 'O lago transparente → plural', aceitas: ['os lagos transparentes', 'lagos transparentes'] },
+                    plur3: { original: 'A flor perfumada → plural', aceitas: ['as flores perfumadas', 'flores perfumadas'] }
+                };
+
+                for (let id in questoes) {
+                    const resposta = resultado.respostas.flexao[id] || '';
+                    const acertou = questoes[id].aceitas.some(a => a.toLowerCase() === resposta.toLowerCase());
+                    
+                    html += `
+                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
+                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].original}</strong>
+                            <p style="margin-top: 8px;">
+                                <strong>Resposta:</strong> 
+                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
+                                    ${resposta || '(não respondeu)'}
+                                </span>
+                            </p>
+                            ${!acertou ? `
+                                <div style="background: #fff3e0; padding: 8px; border-radius: 5px; margin-top: 8px;">
+                                    <strong style="color: #e65100;">Corretas:</strong> ${questoes[id].aceitas.join(' OU ')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            }
+            html += '</div>';
+
+            // ========== FAMÍLIA DE PALAVRAS ==========
+            html += `
+                <div class="detail-section">
+                    <h3>👨‍👩‍👧‍👦 Família de Palavras (Avaliação Automática)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.familia || 0}/100</strong></p>
+            `;
+
+            if (resultado.respostas && resultado.respostas.familia) {
+                const questoes = {
+                    fam1: { pergunta: 'Verbo da família de "belo"', exemplos: ['embelezar', 'embelezamento', 'aformosear'] },
+                    fam2: { pergunta: 'Adjetivo superlativo de "belo"', exemplos: ['belíssimo', 'beleza', 'formoso'] },
+                    fam3: { pergunta: 'Verbo da família de "amor"', exemplos: ['apaixonar', 'amar', 'enamorar'] },
+                    fam4: { pergunta: 'Advérbio da família de "amor"', exemplos: ['amorosamente', 'apaixonado', 'amado'] },
+                    fam5: { pergunta: 'Palavra composta de "água"', exemplos: ['aguaceiro', 'aguarela', 'aquoso'] },
+                    fam6: { pergunta: 'Outra palavra da família de "água"', exemplos: ['aguarela', 'aguaceiro', 'aquário'] },
+                    fam7: { pergunta: 'Nome coletivo de "flor"', exemplos: ['floresta', 'florido', 'florescer'] },
+                    fam8: { pergunta: 'Adjetivo da família de "flor"', exemplos: ['florido', 'floresta', 'floral'] }
+                };
+
+                for (let id in questoes) {
+                    const resposta = resultado.respostas.familia[id] || '';
+                    const acertou = questoes[id].exemplos.some(e => resposta.toLowerCase().includes(e.toLowerCase()));
+                    
+                    html += `
+                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
+                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].pergunta}</strong>
+                            <p style="margin-top: 8px;">
+                                <strong>Resposta:</strong> 
+                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
+                                    ${resposta || '(não respondeu)'}
+                                </span>
+                            </p>
+                            <div style="background: #e3f2fd; padding: 8px; border-radius: 5px; margin-top: 8px;">
+                                <strong>Exemplos corretos:</strong> ${questoes[id].exemplos.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            html += '</div>';
+
+            // ========== FRASES CRIADAS ==========
+            if (resultado.respostas && resultado.respostas.frases) {
+                html += `
+                    <div class="detail-section" style="border: 3px solid #ff9800;">
+                        <h3 style="color: #ff9800;">✍️ FRASES CRIADAS - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
+                        <p style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                            <strong>⚠️ Avalia: Criatividade, correção gramatical, adequação ao tema</strong>
+                        </p>
+                        
+                        <div class="answer-item" style="background: #fff8e1;">
+                            <strong style="font-size: 1.1em; color: #e65100;">1. Frase sobre a beleza de Narciso:</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase1 || '<em style="color: #999;">Não escreveu</em>'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-item" style="background: #fff8e1;">
+                            <strong style="font-size: 1.1em; color: #e65100;">2. Frase sobre o castigo:</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase2 || '<em style="color: #999;">Não escreveu</em>'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-item" style="background: #fff8e1;">
+                            <strong style="font-size: 1.1em; color: #e65100;">3. Frase com conector de oposição:</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase3 || '<em style="color: #999;">Não escreveu</em>'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ========== SENTIDOS CONOTATIVOS ==========
+            if (resultado.respostas && resultado.respostas.conotativos) {
+                html += `
+                    <div class="detail-section" style="border: 3px solid #9c27b0;">
+                        <h3 style="color: #9c27b0;">💭 SENTIDOS CONOTATIVOS - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
+                        <p style="background: #f3e5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                            <strong>⚠️ Avalia: Compreensão do sentido figurado, explicação adequada</strong>
+                        </p>
+                        
+                        <div class="answer-item" style="background: #f3e5f5;">
+                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Coração de pedra"</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot1 || '<em style="color: #999;">Não respondeu</em>'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-item" style="background: #f3e5f5;">
+                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Perdeu-se em si mesmo"</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot2 || '<em style="color: #999;">Não respondeu</em>'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-item" style="background: #f3e5f5;">
+                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Águas cristalinas"</strong>
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
+                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot3 || '<em style="color: #999;">Não respondeu</em>'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ========== ANÁLISE =====
+            if (resultado.analise) {
+                html += `
+                    <div class="detail-section" style="background: #e8f5e9; border: 3px solid #4caf50;">
+                        <h3 style="color: #2e7d32;">📊 RESUMO DA AVALIAÇÃO</h3>
+                        ${resultado.analise.pontosFortes && resultado.analise.pontosFortes.length > 0 ? `
+                            <h4 style="color: #4caf50; margin: 15px 0 10px 0;">✅ Pontos Fortes:</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                ${resultado.analise.pontosFortes.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        ${resultado.analise.areasmelhorar && resultado.analise.areasmelhorar.length > 0 ? `
+                            <h4 style="color: #ff9800; margin: 15px 0 10px 0;">📚 Áreas a Melhorar:</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                ${resultado.analise.areasmelhorar.map(a => `<li>${a}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #ff9800;">
+                            <strong style="color: #e65100;">💡 NOTA PARA O PROFESSOR:</strong>
+                            <p style="color: #e65100; margin-top: 5px;">
+                                A pontuação automática é ${resultado.pontuacoes.total}/100. As respostas abertas (relatório, frases, conotativos) precisam da tua avaliação manual para ajuste final da nota.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
 
             content.innerHTML = html;
             modal.style.display = 'block';
+            
+            console.log('✅ Modal aberto com sucesso!');
         }
 
         function fecharModal() {
-            document.getElementById('detailModal').style.display = 'none';
+            const modal = document.getElementById('detailModal');
+            if (modal) {
+                modal.style.display = 'none';
+                console.log('✅ Modal fechado');
+            }
         }
 
         // Fechar modal ao clicar fora
@@ -921,12 +1029,10 @@
             const filterData = document.getElementById('filterData').value;
 
             resultadosFiltrados = todosResultados.filter(resultado => {
-                // Filtro de turma
                 if (filterTurma && !resultado.aluno.turma.toLowerCase().includes(filterTurma)) {
                     return false;
                 }
 
-                // Filtro de pontuação
                 if (filterPontuacao) {
                     const pontuacao = resultado.pontuacoes.total;
                     if (filterPontuacao === '80-100' && pontuacao < 80) return false;
@@ -934,7 +1040,6 @@
                     if (filterPontuacao === '0-59' && pontuacao >= 60) return false;
                 }
 
-                // Filtro de data
                 if (filterData) {
                     const dataResultado = new Date(resultado.aluno.dataFim).toISOString().split('T')[0];
                     if (dataResultado !== filterData) return false;
@@ -985,7 +1090,7 @@
         }
 
         function exportarPDF() {
-            alert('Para exportar para PDF, podes usar a função de impressão do navegador (Ctrl+P) e escolher "Guardar como PDF".');
+            alert('Para exportar para PDF, usa a função de impressão do navegador (Ctrl+P) e escolhe "Guardar como PDF".');
             window.print();
         }
 
@@ -994,11 +1099,6 @@
             document.getElementById('resultsTable').style.display = 'none';
             carregarResultados();
         }
-
-        // ===== INICIALIZAÇÃO =====
-        window.addEventListener('load', () => {
-            carregarResultados();
-        });
     </script>
 </body>
 </html>
