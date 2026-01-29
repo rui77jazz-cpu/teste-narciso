@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Professor - Teste Narciso</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #1F4E78;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filters label {
+            font-weight: bold;
+            color: #2E5090;
+        }
+
+        .filters select,
+        .filters input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .filters button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .filters button:hover {
+            transform: translateY(-2px);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .results-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .score-excellent {
+            background: #4caf50;
+            color: white;
+        }
+
+        .score-good {
+            background: #8bc34a;
+            color: white;
+        }
+
+        .score-fair {
+            background: #ff9800;
+            color: white;
+        }
+
+        .score-poor {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .btn-view:hover {
+            background: #5568d3;
+        }
+
+        .btn-export {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 5px;
+            transition: transform 0.3s;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #999;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal h2 {
+            color: #1F4E78;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .detail-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .detail-section h3 {
+            color: #2E5090;
+            margin-bottom: 15px;
+        }
+
+        .answer-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .answer-item strong {
+            color: #2E5090;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .answer-item p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .loading:after {
+            content: '...';
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .section-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .section-score-card {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ddd;
+        }
+
+        .section-score-card h4 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .section-score-card .score {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .results-table {
+                font-size: 0.9em;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 10px 8px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+                margin: 5% auto;
+            }
+        }
+
+        .export-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Painel do Professor</h1>
+        <p class="subtitle">Teste Narciso - Resultados dos Alunos</p>
+
+        <!-- Estatísticas Gerais -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalAlunos">0</h3>
+                <p>Total de Alunos</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="mediaGeral">0</h3>
+                <p>Média Geral</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="alunosExcelente">0</h3>
+                <p>Excelente (≥80)</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="alunosBom">0</h3>
+                <p>Bom (60-79)</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="alunosMelhorar">0</h3>
+                <p>A Melhorar (<60)</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <label for="filterTurma">Turma:</label>
+            <input type="text" id="filterTurma" placeholder="Ex: 4M, 4A..." onchange="filtrarResultados()">
+
+            <label for="filterPontuacao">Pontuação:</label>
+            <select id="filterPontuacao" onchange="filtrarResultados()">
+                <option value="">Todas</option>
+                <option value="80-100">Excelente (80-100)</option>
+                <option value="60-79">Bom (60-79)</option>
+                <option value="0-59">A Melhorar (0-59)</option>
+            </select>
+
+            <label for="filterData">Data:</label>
+            <input type="date" id="filterData" onchange="filtrarResultados()">
+
+            <button onclick="limparFiltros()">🔄 Limpar Filtros</button>
+        </div>
+
+        <!-- Botões de Exportação -->
+        <div class="export-buttons">
+            <button class="btn-export" onclick="exportarCSV()">📊 Exportar CSV</button>
+            <button class="btn-export" onclick="exportarPDF()">📄 Exportar PDF</button>
+            <button class="btn-export" onclick="atualizarDados()">🔄 Atualizar Dados</button>
+        </div>
+
+        <!-- Tabela de Resultados -->
+        <div id="loadingMessage" class="loading">A carregar resultados</div>
+        <div id="noDataMessage" class="no-data" style="display: none;">
+            Ainda não há resultados disponíveis. Os resultados aparecerão aqui quando os alunos completarem o teste.
+        </div>
+
+        <table class="results-table" id="resultsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Turma</th>
+                    <th>Data/Hora</th>
+                    <th>Pontuação Total</th>
+                    <th>Relatório</th>
+                    <th>Graus</th>
+                    <th>Conectores</th>
+                    <th>Flexão</th>
+                    <th>Família</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        // ===== CONFIGURAÇÃO DO FIREBASE =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyCKn6YGp4LnSTA4impkHSy5oKuljzosbNc",
+            authDomain: "narciso-gramatica.firebaseapp.com",
+            databaseURL: "https://narciso-gramatica-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "narciso-gramatica",
+            storageBucket: "narciso-gramatica.firebasestorage.app",
+            messagingSenderId: "911157010213",
+            appId: "1:911157010213:web:7c3e9be440a09fbbe144cc"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Dados globais
+        let todosResultados = [];
+        let resultadosFiltrados = [];
+
+        // ===== CARREGAR DADOS =====
+        function carregarResultados() {
+            const testesRef = database.ref('testes-narciso');
+            
+            testesRef.on('value', (snapshot) => {
+                todosResultados = [];
+                
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    data.id = childSnapshot.key;
+                    todosResultados.push(data);
+                });
+
+                // Ordenar por data (mais recente primeiro)
+                todosResultados.sort((a, b) => {
+                    return new Date(b.aluno.dataFim) - new Date(a.aluno.dataFim);
+                });
+
+                resultadosFiltrados = [...todosResultados];
+                atualizarInterface();
+            });
+        }
+
+        // ===== ATUALIZAR INTERFACE =====
+        function atualizarInterface() {
+            document.getElementById('loadingMessage').style.display = 'none';
+            
+            if (resultadosFiltrados.length === 0) {
+                document.getElementById('noDataMessage').style.display = 'block';
+                document.getElementById('resultsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('noDataMessage').style.display = 'none';
+            document.getElementById('resultsTable').style.display = 'table';
+
+            atualizarEstatisticas();
+            atualizarTabela();
+        }
+
+        // ===== ATUALIZAR ESTATÍSTICAS =====
+        function atualizarEstatisticas() {
+            const total = resultadosFiltrados.length;
+            let somaNotas = 0;
+            let excelente = 0;
+            let bom = 0;
+            let melhorar = 0;
+
+            resultadosFiltrados.forEach(resultado => {
+                const nota = resultado.pontuacoes.total;
+                somaNotas += nota;
+
+                if (nota >= 80) excelente++;
+                else if (nota >= 60) bom++;
+                else melhorar++;
+            });
+
+            const media = total > 0 ? Math.round(somaNotas / total) : 0;
+
+            document.getElementById('totalAlunos').textContent = total;
+            document.getElementById('mediaGeral').textContent = media;
+            document.getElementById('alunosExcelente').textContent = excelente;
+            document.getElementById('alunosBom').textContent = bom;
+            document.getElementById('alunosMelhorar').textContent = melhorar;
+        }
+
+        // ===== ATUALIZAR TABELA =====
+        function atualizarTabela() {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+
+            resultadosFiltrados.forEach(resultado => {
+                const row = tbody.insertRow();
+                const pontuacaoTotal = resultado.pontuacoes.total;
+                const pontuacoesSeccao = resultado.pontuacoes.porSeccao;
+
+                // Nome
+                row.insertCell(0).textContent = resultado.aluno.nome;
+
+                // Turma
+                row.insertCell(1).textContent = resultado.aluno.turma;
+
+                // Data/Hora
+                const dataFim = new Date(resultado.aluno.dataFim);
+                row.insertCell(2).textContent = dataFim.toLocaleString('pt-PT');
+
+                // Pontuação Total
+                const cellTotal = row.insertCell(3);
+                const badgeTotal = document.createElement('span');
+                badgeTotal.className = 'score-badge ' + getScoreClass(pontuacaoTotal);
+                badgeTotal.textContent = pontuacaoTotal;
+                cellTotal.appendChild(badgeTotal);
+
+                // Pontuações por secção
+                row.insertCell(4).textContent = pontuacoesSeccao.relatorio || '-';
+                row.insertCell(5).textContent = pontuacoesSeccao.graus || '-';
+                row.insertCell(6).textContent = pontuacoesSeccao.conectores || '-';
+                row.insertCell(7).textContent = pontuacoesSeccao.flexao || '-';
+                row.insertCell(8).textContent = pontuacoesSeccao.familia || '-';
+
+                // Botão de ações
+                const cellAcoes = row.insertCell(9);
+                const btnVer = document.createElement('button');
+                btnVer.className = 'btn-view';
+                btnVer.textContent = '👁️ Ver Detalhes';
+                btnVer.onclick = () => mostrarDetalhes(resultado);
+                cellAcoes.appendChild(btnVer);
+            });
+        }
+
+        // ===== CLASSIFICAÇÃO POR COR =====
+        function getScoreClass(score) {
+            if (score >= 80) return 'score-excellent';
+            if (score >= 70) return 'score-good';
+            if (score >= 50) return 'score-fair';
+            return 'score-poor';
+        }
+
+        // ===== MOSTRAR DETALHES =====
+        function mostrarDetalhes(resultado) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('modalContent');
+
+            let html = `
+                <h2>📋 Detalhes do Teste</h2>
+                
+                <div class="detail-section">
+                    <h3>👤 Informações do Aluno</h3>
+                    <p><strong>Nome:</strong> ${resultado.aluno.nome}</p>
+                    <p><strong>Turma:</strong> ${resultado.aluno.turma}</p>
+                    <p><strong>Data de Início:</strong> ${new Date(resultado.aluno.dataInicio).toLocaleString('pt-PT')}</p>
+                    <p><strong>Data de Conclusão:</strong> ${new Date(resultado.aluno.dataFim).toLocaleString('pt-PT')}</p>
+                    <p><strong>Pontuação Total:</strong> <span class="score-badge ${getScoreClass(resultado.pontuacoes.total)}">${resultado.pontuacoes.total}/100</span></p>
+                </div>
+
+                <div class="detail-section">
+                    <h3>📊 Pontuações por Secção</h3>
+                    <div class="section-scores">
+                        <div class="section-score-card">
+                            <h4>📝 Relatório</h4>
+                            <div class="score">${resultado.pontuacoes.porSeccao.relatorio || 0}</div>
+                        </div>
+                        <div class="section-score-card">
+                            <h4>📊 Graus</h4>
+                            <div class="score">${resultado.pontuacoes.porSeccao.graus || 0}</div>
+                        </div>
+                        <div class="section-score-card">
+                            <h4>🔗 Conectores</h4>
+                            <div class="score">${resultado.pontuacoes.porSeccao.conectores || 0}</div>
+                        </div>
+                        <div class="section-score-card">
+                            <h4>🔄 Flexão</h4>
+                            <div class="score">${resultado.pontuacoes.porSeccao.flexao || 0}</div>
+                        </div>
+                        <div class="section-score-card">
+                            <h4>👨‍👩‍👧‍👦 Família</h4>
+                            <div class="score">${resultado.pontuacoes.porSeccao.familia || 0}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>📝 Respostas do Relatório</h3>
+            `;
+
+            // Adicionar respostas do relatório
+            if (resultado.respostas.relatorio) {
+                const perguntas = {
+                    q1: '1. Quem era Narciso e o que o tornava especial?',
+                    q2: '2. O que disse o profeta Tirésias sobre o destino de Narciso?',
+                    q3: '3. Como Narciso tratava as pessoas que se apaixonavam por ele?',
+                    q4: '4. O que aconteceu a Eco depois de Narciso a rejeitar?',
+                    q5: '5. Qual foi o castigo que Nêmesis aplicou a Narciso?',
+                    q6: '6. O que aconteceu a Narciso no final da história?',
+                    q7: '7. Que lição moral podemos tirar desta história?'
+                };
+
+                for (let q in perguntas) {
+                    if (resultado.respostas.relatorio[q]) {
+                        html += `
+                            <div class="answer-item">
+                                <strong>${perguntas[q]}</strong>
+                                <p>${resultado.respostas.relatorio[q]}</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            html += `</div>`;
+
+            // Adicionar frases criativas
+            if (resultado.respostas.frases) {
+                html += `
+                    <div class="detail-section">
+                        <h3>✍️ Frases Criadas</h3>
+                        <div class="answer-item">
+                            <strong>Sobre a beleza de Narciso:</strong>
+                            <p>${resultado.respostas.frases.frase1 || '-'}</p>
+                        </div>
+                        <div class="answer-item">
+                            <strong>Sobre o castigo:</strong>
+                            <p>${resultado.respostas.frases.frase2 || '-'}</p>
+                        </div>
+                        <div class="answer-item">
+                            <strong>Com conector de oposição:</strong>
+                            <p>${resultado.respostas.frases.frase3 || '-'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Adicionar sentidos conotativos
+            if (resultado.respostas.conotativos) {
+                html += `
+                    <div class="detail-section">
+                        <h3>💭 Sentidos Conotativos</h3>
+                        <div class="answer-item">
+                            <strong>"Coração de pedra":</strong>
+                            <p>${resultado.respostas.conotativos.conot1 || '-'}</p>
+                        </div>
+                        <div class="answer-item">
+                            <strong>"Perdeu-se em si mesmo":</strong>
+                            <p>${resultado.respostas.conotativos.conot2 || '-'}</p>
+                        </div>
+                        <div class="answer-item">
+                            <strong>"Águas cristalinas":</strong>
+                            <p>${resultado.respostas.conotativos.conot3 || '-'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Adicionar análise
+            html += `
+                <div class="detail-section">
+                    <h3>📈 Análise de Desempenho</h3>
+                    ${resultado.analise.pontosFortes.length > 0 ? `
+                        <h4 style="color: #4caf50;">✅ Pontos Fortes:</h4>
+                        <ul>
+                            ${resultado.analise.pontosFortes.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${resultado.analise.areasmelhorar.length > 0 ? `
+                        <h4 style="color: #ff9800;">📚 Áreas a Melhorar:</h4>
+                        <ul>
+                            ${resultado.analise.areasmelhorar.map(a => `<li>${a}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                </div>
+            `;
+
+            content.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        function fecharModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // ===== FILTROS =====
+        function filtrarResultados() {
+            const filterTurma = document.getElementById('filterTurma').value.trim().toLowerCase();
+            const filterPontuacao = document.getElementById('filterPontuacao').value;
+            const filterData = document.getElementById('filterData').value;
+
+            resultadosFiltrados = todosResultados.filter(resultado => {
+                // Filtro de turma
+                if (filterTurma && !resultado.aluno.turma.toLowerCase().includes(filterTurma)) {
+                    return false;
+                }
+
+                // Filtro de pontuação
+                if (filterPontuacao) {
+                    const pontuacao = resultado.pontuacoes.total;
+                    if (filterPontuacao === '80-100' && pontuacao < 80) return false;
+                    if (filterPontuacao === '60-79' && (pontuacao < 60 || pontuacao >= 80)) return false;
+                    if (filterPontuacao === '0-59' && pontuacao >= 60) return false;
+                }
+
+                // Filtro de data
+                if (filterData) {
+                    const dataResultado = new Date(resultado.aluno.dataFim).toISOString().split('T')[0];
+                    if (dataResultado !== filterData) return false;
+                }
+
+                return true;
+            });
+
+            atualizarInterface();
+        }
+
+        function limparFiltros() {
+            document.getElementById('filterTurma').value = '';
+            document.getElementById('filterPontuacao').value = '';
+            document.getElementById('filterData').value = '';
+            filtrarResultados();
+        }
+
+        // ===== EXPORTAÇÃO =====
+        function exportarCSV() {
+            if (resultadosFiltrados.length === 0) {
+                alert('Não há dados para exportar!');
+                return;
+            }
+
+            let csv = 'Nome,Turma,Data,Hora,Pontuação Total,Relatório,Graus,Conectores,Flexão,Família\n';
+
+            resultadosFiltrados.forEach(resultado => {
+                const dataFim = new Date(resultado.aluno.dataFim);
+                const data = dataFim.toLocaleDateString('pt-PT');
+                const hora = dataFim.toLocaleTimeString('pt-PT');
+                const pontuacoes = resultado.pontuacoes.porSeccao;
+
+                csv += `"${resultado.aluno.nome}","${resultado.aluno.turma}","${data}","${hora}",`;
+                csv += `${resultado.pontuacoes.total},${pontuacoes.relatorio || 0},${pontuacoes.graus || 0},`;
+                csv += `${pontuacoes.conectores || 0},${pontuacoes.flexao || 0},${pontuacoes.familia || 0}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `resultados_narciso_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportarPDF() {
+            alert('Para exportar para PDF, podes usar a função de impressão do navegador (Ctrl+P) e escolher "Guardar como PDF".');
+            window.print();
+        }
+
+        function atualizarDados() {
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('resultsTable').style.display = 'none';
+            carregarResultados();
+        }
+
+        // ===== INICIALIZAÇÃO =====
+        window.addEventListener('load', () => {
+            carregarResultados();
+        });
+    </script>
+</body>
+</html>
