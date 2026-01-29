@@ -607,7 +607,7 @@
             const content = document.getElementById('modalContent');
 
             let html = `
-                <h2>📋 Detalhes do Teste</h2>
+                <h2>📋 Detalhes do Teste - ${resultado.aluno.nome}</h2>
                 
                 <div class="detail-section">
                     <h3>👤 Informações do Aluno</h3>
@@ -672,6 +672,170 @@
                 }
             }
             html += `</div>`;
+
+            // Adicionar respostas dos Graus dos Adjetivos
+            if (resultado.respostas.graus && Object.keys(resultado.respostas.graus).length > 0) {
+                html += `
+                    <div class="detail-section">
+                        <h3>📊 Graus dos Adjetivos (Drag & Drop)</h3>
+                `;
+                
+                const respostasGraus = resultado.respostas.graus;
+                const perguntasGraus = {
+                    'mais belo': 'Narciso era _____ do que qualquer outro jovem. (comparativo de superioridade)',
+                    'belíssimo': 'Narciso era _____! (superlativo absoluto sintético)',
+                    'tão frio como': 'Narciso era _____ o gelo. (comparativo de igualdade)',
+                    'menos vaidoso': 'Narciso era _____ do que devia. (comparativo de inferioridade)',
+                    'muito triste': 'Eco ficou _____. (superlativo absoluto analítico)',
+                    'cristalinas': 'As águas eram _____. (grau normal)'
+                };
+                
+                for (let resposta in respostasGraus) {
+                    const valor = respostasGraus[resposta];
+                    const pergunta = perguntasGraus[resposta] || `Resposta esperada: ${resposta}`;
+                    const correto = valor === resposta ? '✅' : '❌';
+                    html += `
+                        <div class="answer-item">
+                            <strong>${correto} ${pergunta}</strong>
+                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
+                            ${valor !== resposta ? `<p style="color: #4caf50;">Resposta correta: <strong>${resposta}</strong></p>` : ''}
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+
+            // Adicionar respostas dos Conectores
+            if (resultado.respostas.conectores && Object.keys(resultado.respostas.conectores).length > 0) {
+                html += `
+                    <div class="detail-section">
+                        <h3>🔗 Conectores Discursivos</h3>
+                `;
+                
+                const respostasConectores = resultado.respostas.conectores;
+                const perguntasConectores = {
+                    con1: 'Narciso era belo, _____ era vaidoso.',
+                    con2: 'Eco apaixonou-se por Narciso _____ ele a rejeitou.',
+                    con3: '_____ Narciso viu o seu reflexo, apaixonou-se.',
+                    con4: 'Narciso definhava _____ não conseguia deixar de olhar para o lago.',
+                    con5: '_____, nasceu uma flor no lugar onde Narciso morreu.'
+                };
+                
+                const respostasCorretas = {
+                    con1: 'mas / porém / contudo / todavia',
+                    con2: 'mas / porém / todavia / contudo',
+                    con3: 'quando / logo que / assim que',
+                    con4: 'porque / pois / uma vez que',
+                    con5: 'finalmente / por fim / no final / enfim'
+                };
+                
+                for (let id in respostasConectores) {
+                    const valor = respostasConectores[id];
+                    const pergunta = perguntasConectores[id];
+                    const corretas = respostasCorretas[id];
+                    
+                    html += `
+                        <div class="answer-item">
+                            <strong>${pergunta}</strong>
+                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
+                            <p style="color: #666;">Respostas aceites: ${corretas}</p>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+
+            // Adicionar respostas da Flexão
+            if (resultado.respostas.flexao && Object.keys(resultado.respostas.flexao).length > 0) {
+                html += `
+                    <div class="detail-section">
+                        <h3>🔄 Flexão em Género e Número</h3>
+                `;
+                
+                const respostasFlexao = resultado.respostas.flexao;
+                const perguntasFlexao = {
+                    fem1: 'O jovem belo → (feminino)',
+                    fem2: 'O deus poderoso → (feminino)',
+                    fem3: 'O profeta sábio → (feminino)',
+                    plur1: 'A ninfa generosa → (plural)',
+                    plur2: 'O lago transparente → (plural)',
+                    plur3: 'A flor perfumada → (plural)'
+                };
+                
+                const respostasCorretas = {
+                    fem1: 'a jovem bela / jovem bela',
+                    fem2: 'a deusa poderosa / deusa poderosa',
+                    fem3: 'a profetisa sábia / profetisa sábia',
+                    plur1: 'as ninfas generosas / ninfas generosas',
+                    plur2: 'os lagos transparentes / lagos transparentes',
+                    plur3: 'as flores perfumadas / flores perfumadas'
+                };
+                
+                for (let id in respostasFlexao) {
+                    const valor = respostasFlexao[id];
+                    const pergunta = perguntasFlexao[id];
+                    const corretas = respostasCorretas[id];
+                    
+                    html += `
+                        <div class="answer-item">
+                            <strong>${pergunta}</strong>
+                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
+                            <p style="color: #666;">Respostas aceites: ${corretas}</p>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+
+            // Adicionar respostas da Família de Palavras
+            if (resultado.respostas.familia && Object.keys(resultado.respostas.familia).length > 0) {
+                html += `
+                    <div class="detail-section">
+                        <h3>👨‍👩‍👧‍👦 Família de Palavras</h3>
+                `;
+                
+                const respostasFamilia = resultado.respostas.familia;
+                const perguntasFamilia = {
+                    fam1: 'Família de "belo" - Verbo:',
+                    fam2: 'Família de "belo" - Adjetivo no superlativo:',
+                    fam3: 'Família de "amor" - Verbo:',
+                    fam4: 'Família de "amor" - Advérbio:',
+                    fam5: 'Família de "água" - Palavra composta:',
+                    fam6: 'Família de "água" - Outra palavra:',
+                    fam7: 'Família de "flor" - Nome coletivo:',
+                    fam8: 'Família de "flor" - Adjetivo:'
+                };
+                
+                const exemploCorretos = {
+                    fam1: 'embelezar, embelezamento, aformosear',
+                    fam2: 'belíssimo, beleza, formoso',
+                    fam3: 'apaixonar, amar, enamorar',
+                    fam4: 'amorosamente, apaixonado, amado',
+                    fam5: 'aguaceiro, aguarela, aquoso',
+                    fam6: 'aguarela, aguaceiro, aquário',
+                    fam7: 'floresta, florido, florescer',
+                    fam8: 'florido, floresta, floral'
+                };
+                
+                for (let id in respostasFamilia) {
+                    const valor = respostasFamilia[id];
+                    const pergunta = perguntasFamilia[id];
+                    const exemplos = exemploCorretos[id];
+                    
+                    html += `
+                        <div class="answer-item">
+                            <strong>${pergunta}</strong>
+                            <p>Resposta do aluno: <strong>${valor || '(não respondeu)'}</strong></p>
+                            <p style="color: #666;">Exemplos de respostas corretas: ${exemplos}</p>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
 
             // Adicionar frases criativas
             if (resultado.respostas.frases) {
