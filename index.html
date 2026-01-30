@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -1114,11 +1113,11 @@
         // Verificação dos Conectores
         function checkConectores() {
             const answers = {
-                con1: ['mas', 'porém', 'contudo', 'todavia'],
-                con2: ['mas', 'porém', 'todavia', 'contudo'],
-                con3: ['quando', 'logo que', 'assim que'],
-                con4: ['porque', 'pois', 'uma vez que'],
-                con5: ['finalmente', 'por fim', 'no final', 'enfim']
+                con1: ['mas', 'porém', 'porem', 'contudo', 'todavia'],
+                con2: ['mas', 'porém', 'porem', 'todavia', 'contudo'],
+                con3: ['quando', 'logo que', 'assim que', 'logo-que', 'assim-que'],
+                con4: ['porque', 'pois', 'uma vez que', 'visto que', 'já que'],
+                con5: ['finalmente', 'por fim', 'no final', 'enfim', 'por-fim']
             };
 
             let correct = 0;
@@ -1126,10 +1125,27 @@
 
             for (let id in answers) {
                 const input = document.getElementById(id);
-                const value = input.value.trim().toLowerCase();
+                let value = input.value.trim().toLowerCase();
+                
+                // Remover espaços extras e normalizar
+                value = value.replace(/\s+/g, ' ');
+                
+                // Remover acentos para comparação mais flexível
+                const valorNormalizado = value
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '');
+                
+                // Normalizar respostas aceites também
+                const respostasNormalizadas = answers[id].map(r => 
+                    r.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                );
+                
                 studentAnswers.conectores[id] = value;
                 
-                if (answers[id].includes(value)) {
+                // Verificar se a resposta (normalizada) está nas respostas aceites (normalizadas)
+                const acertou = respostasNormalizadas.includes(valorNormalizado);
+                
+                if (acertou) {
                     input.style.borderColor = '#4caf50';
                     correct++;
                 } else if (value !== '') {
