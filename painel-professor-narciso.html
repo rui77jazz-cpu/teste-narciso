@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -204,7 +205,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             animation: fadeIn 0.3s;
         }
 
@@ -214,7 +215,7 @@
             padding: 30px;
             border-radius: 20px;
             width: 90%;
-            max-width: 1000px;
+            max-width: 1100px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -282,22 +283,93 @@
             line-height: 1.6;
         }
 
+        /* Sistema de Correção */
+        .correction-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .correction-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .correction-controls label {
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .correction-controls input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .correction-controls textarea {
+            flex: 1;
+            min-width: 300px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-save-correction {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .btn-save-correction:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .total-points {
+            background: #e8f5e9;
+            border: 3px solid #4caf50;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .total-points h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .total-points .score {
+            font-size: 3em;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
         .loading {
             text-align: center;
             padding: 40px;
             color: #667eea;
             font-size: 1.2em;
-        }
-
-        .loading:after {
-            content: '...';
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
         }
 
         .no-data {
@@ -307,31 +379,9 @@
             font-size: 1.1em;
         }
 
-        .section-scores {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .section-score-card {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
+        .export-buttons {
             text-align: center;
-            border: 2px solid #ddd;
-        }
-
-        .section-score-card h4 {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .section-score-card .score {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #667eea;
+            margin: 20px 0;
         }
 
         @media (max-width: 768px) {
@@ -339,43 +389,25 @@
                 padding: 15px;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .results-table {
-                font-size: 0.9em;
-            }
-
-            .results-table th,
-            .results-table td {
-                padding: 10px 8px;
-            }
-
             .modal-content {
                 width: 95%;
                 padding: 20px;
                 margin: 5% auto;
             }
-        }
 
-        .export-buttons {
-            text-align: center;
-            margin: 20px 0;
+            .correction-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📊 Painel do Professor</h1>
-        <p class="subtitle">Teste Narciso - Resultados dos Alunos</p>
+        <p class="subtitle">Teste Narciso - Resultados e Correção</p>
 
-        <!-- Estatísticas Gerais -->
+        <!-- Estatísticas -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3 id="totalAlunos">0</h3>
@@ -418,17 +450,16 @@
             <button onclick="limparFiltros()">🔄 Limpar Filtros</button>
         </div>
 
-        <!-- Botões de Exportação -->
+        <!-- Botões -->
         <div class="export-buttons">
             <button class="btn-export" onclick="exportarCSV()">📊 Exportar CSV</button>
-            <button class="btn-export" onclick="exportarPDF()">📄 Exportar PDF</button>
             <button class="btn-export" onclick="atualizarDados()">🔄 Atualizar Dados</button>
         </div>
 
-        <!-- Tabela de Resultados -->
-        <div id="loadingMessage" class="loading">A carregar resultados</div>
+        <!-- Tabela -->
+        <div id="loadingMessage" class="loading">A carregar resultados...</div>
         <div id="noDataMessage" class="no-data" style="display: none;">
-            Ainda não há resultados disponíveis. Os resultados aparecerão aqui quando os alunos completarem o teste.
+            Ainda não há resultados disponíveis.
         </div>
 
         <table class="results-table" id="resultsTable" style="display: none;">
@@ -437,21 +468,15 @@
                     <th>Nome</th>
                     <th>Turma</th>
                     <th>Data/Hora</th>
-                    <th>Pontuação Total</th>
-                    <th>Relatório</th>
-                    <th>Graus</th>
-                    <th>Conectores</th>
-                    <th>Flexão</th>
-                    <th>Família</th>
+                    <th>Pontuação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="resultsBody">
-            </tbody>
+            <tbody id="resultsBody"></tbody>
         </table>
     </div>
 
-    <!-- Modal de Detalhes -->
+    <!-- Modal -->
     <div id="detailModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="fecharModal()">&times;</span>
@@ -459,12 +484,11 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // ===== CONFIGURAÇÃO DO FIREBASE =====
         const firebaseConfig = {
             apiKey: "AIzaSyCKn6YGp4LnSTA4impkHSy5oKuljzosbNc",
             authDomain: "narciso-gramatica.firebaseapp.com",
@@ -475,27 +499,18 @@
             appId: "1:911157010213:web:7c3e9be440a09fbbe144cc"
         };
 
-        // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Dados globais
         let todosResultados = [];
         let resultadosFiltrados = [];
+        let testeAtualId = null;
 
-        // Verificar ao carregar
-        window.addEventListener('load', function() {
-            console.log('✅ Painel carregado!');
-            const modal = document.getElementById('detailModal');
-            if (!modal) {
-                console.error('❌ Modal não encontrado!');
-            } else {
-                console.log('✅ Modal encontrado!');
-            }
+        window.addEventListener('load', () => {
+            console.log('✅ Painel carregado');
             carregarResultados();
         });
 
-        // ===== CARREGAR DADOS =====
         function carregarResultados() {
             const testesRef = database.ref('testes-narciso');
             
@@ -508,7 +523,6 @@
                     todosResultados.push(data);
                 });
 
-                // Ordenar por data (mais recente primeiro)
                 todosResultados.sort((a, b) => {
                     return new Date(b.aluno.dataFim) - new Date(a.aluno.dataFim);
                 });
@@ -518,7 +532,6 @@
             });
         }
 
-        // ===== ATUALIZAR INTERFACE =====
         function atualizarInterface() {
             document.getElementById('loadingMessage').style.display = 'none';
             
@@ -535,7 +548,6 @@
             atualizarTabela();
         }
 
-        // ===== ATUALIZAR ESTATÍSTICAS =====
         function atualizarEstatisticas() {
             const total = resultadosFiltrados.length;
             let somaNotas = 0;
@@ -544,7 +556,7 @@
             let melhorar = 0;
 
             resultadosFiltrados.forEach(resultado => {
-                const nota = resultado.pontuacoes.total;
+                const nota = resultado.pontuacaoFinal || resultado.pontuacoes.total || 0;
                 somaNotas += nota;
 
                 if (nota >= 80) excelente++;
@@ -561,51 +573,35 @@
             document.getElementById('alunosMelhorar').textContent = melhorar;
         }
 
-        // ===== ATUALIZAR TABELA =====
         function atualizarTabela() {
             const tbody = document.getElementById('resultsBody');
             tbody.innerHTML = '';
 
             resultadosFiltrados.forEach(resultado => {
                 const row = tbody.insertRow();
-                const pontuacaoTotal = resultado.pontuacoes.total;
-                const pontuacoesSeccao = resultado.pontuacoes.porSeccao;
+                const pontuacao = resultado.pontuacaoFinal || resultado.pontuacoes.total || 0;
 
-                // Nome
                 row.insertCell(0).textContent = resultado.aluno.nome;
-
-                // Turma
                 row.insertCell(1).textContent = resultado.aluno.turma;
-
-                // Data/Hora
+                
                 const dataFim = new Date(resultado.aluno.dataFim);
                 row.insertCell(2).textContent = dataFim.toLocaleString('pt-PT');
 
-                // Pontuação Total
-                const cellTotal = row.insertCell(3);
-                const badgeTotal = document.createElement('span');
-                badgeTotal.className = 'score-badge ' + getScoreClass(pontuacaoTotal);
-                badgeTotal.textContent = pontuacaoTotal;
-                cellTotal.appendChild(badgeTotal);
+                const cellPont = row.insertCell(3);
+                const badge = document.createElement('span');
+                badge.className = 'score-badge ' + getScoreClass(pontuacao);
+                badge.textContent = pontuacao + '/100';
+                cellPont.appendChild(badge);
 
-                // Pontuações por secção
-                row.insertCell(4).textContent = pontuacoesSeccao.relatorio || '-';
-                row.insertCell(5).textContent = pontuacoesSeccao.graus || '-';
-                row.insertCell(6).textContent = pontuacoesSeccao.conectores || '-';
-                row.insertCell(7).textContent = pontuacoesSeccao.flexao || '-';
-                row.insertCell(8).textContent = pontuacoesSeccao.familia || '-';
-
-                // Botão de ações
-                const cellAcoes = row.insertCell(9);
+                const cellAcoes = row.insertCell(4);
                 const btnVer = document.createElement('button');
                 btnVer.className = 'btn-view';
-                btnVer.textContent = '👁️ Ver Detalhes';
+                btnVer.textContent = '📝 Corrigir/Ver';
                 btnVer.onclick = () => mostrarDetalhes(resultado);
                 cellAcoes.appendChild(btnVer);
             });
         }
 
-        // ===== CLASSIFICAÇÃO POR COR =====
         function getScoreClass(score) {
             if (score >= 80) return 'score-excellent';
             if (score >= 70) return 'score-good';
@@ -613,416 +609,328 @@
             return 'score-poor';
         }
 
-        // ===== FUNÇÃO AUXILIAR: CALCULAR TEMPO =====
-        function calcularTempo(inicio, fim) {
-            const diff = new Date(fim) - new Date(inicio);
-            const minutos = Math.floor(diff / 60000);
-            const segundos = Math.floor((diff % 60000) / 1000);
-            return `${minutos}m ${segundos}s`;
-        }
-
-        // ===== MOSTRAR DETALHES - VERSÃO COMPLETA =====
         function mostrarDetalhes(resultado) {
-            console.log('🔍 Abrindo detalhes de:', resultado.aluno.nome);
+            console.log('🔍 Abrindo correção:', resultado.aluno.nome);
+            testeAtualId = resultado.id;
             
             const modal = document.getElementById('detailModal');
             const content = document.getElementById('modalContent');
             
             if (!modal || !content) {
-                alert('❌ Erro: Modal não encontrado! Recarrega a página.');
+                alert('❌ Erro: Modal não encontrado!');
                 return;
             }
 
-            const tempoTotal = calcularTempo(resultado.aluno.dataInicio, resultado.aluno.dataFim);
+            // Calcular pontos atuais
+            const correcaoManual = resultado.correcaoManual || {};
+            let pontosRelatorio = 0;
+            let pontosFrases = 0;
+            let pontosConotativos = 0;
+
+            // Pontos do relatório
+            for (let i = 1; i <= 7; i++) {
+                pontosRelatorio += parseInt(correcaoManual[`q${i}`] || 0);
+            }
+
+            // Pontos das frases
+            for (let i = 1; i <= 3; i++) {
+                pontosFrases += parseInt(correcaoManual[`frase${i}`] || 0);
+            }
+
+            // Pontos dos conotativos
+            for (let i = 1; i <= 3; i++) {
+                pontosConotativos += parseInt(correcaoManual[`conot${i}`] || 0);
+            }
+
+            // Pontos automáticos (25 pontos)
+            const pontosGraus = Math.round((resultado.pontuacoes.porSeccao.graus || 0) * 12 / 100);
+            const pontosConectores = Math.round((resultado.pontuacoes.porSeccao.conectores || 0) * 5 / 100);
+            const pontosFlexao = Math.round((resultado.pontuacoes.porSeccao.flexao || 0) * 6 / 100);
+            const pontosFamilia = Math.round((resultado.pontuacoes.porSeccao.familia || 0) * 2 / 100);
+
+            const pontosAutomaticos = pontosGraus + pontosConectores + pontosFlexao + pontosFamilia;
+            const pontosManuais = pontosRelatorio + pontosFrases + pontosConotativos;
+            const pontuacaoTotal = pontosAutomaticos + pontosManuais;
 
             let html = `
-                <h2>📋 Prova Completa - ${resultado.aluno.nome}</h2>
+                <h2>📝 Correção do Teste - ${resultado.aluno.nome}</h2>
                 
-                <div class="detail-section" style="background: #e3f2fd;">
-                    <h3>👤 Informações do Aluno</h3>
-                    <p><strong>Nome:</strong> ${resultado.aluno.nome}</p>
-                    <p><strong>Turma:</strong> ${resultado.aluno.turma}</p>
-                    <p><strong>Data:</strong> ${new Date(resultado.aluno.dataFim).toLocaleDateString('pt-PT')}</p>
-                    <p><strong>Hora:</strong> ${new Date(resultado.aluno.dataFim).toLocaleTimeString('pt-PT')}</p>
-                    <p><strong>Tempo de Teste:</strong> ${tempoTotal}</p>
-                    <p><strong>Pontuação Automática:</strong> <span class="score-badge ${getScoreClass(resultado.pontuacoes.total)}">${resultado.pontuacoes.total}/100</span></p>
+                <div class="total-points">
+                    <h3>Pontuação Total</h3>
+                    <div class="score" id="pontuacaoDisplay">${pontuacaoTotal}/100</div>
+                    <p style="margin-top: 10px; color: #666;">
+                        Automático: ${pontosAutomaticos}/25 | Manual: ${pontosManuais}/75
+                    </p>
                 </div>
 
                 <div class="detail-section" style="background: #fff3cd; border-left: 5px solid #ffc107;">
-                    <h3 style="color: #856404;">⚠️ ATENÇÃO PROFESSOR</h3>
-                    <p style="color: #856404; margin-bottom: 10px;">
-                        <strong>Esta é a prova COMPLETA do aluno para avaliação manual.</strong>
-                    </p>
-                    <ul style="color: #856404; margin-left: 20px;">
-                        <li>✅ Verde = Resposta CORRETA (avaliação automática)</li>
-                        <li>❌ Vermelho = Resposta INCORRETA ou não respondida</li>
-                        <li>📝 IMPORTANTE: Respostas abertas (relatório, frases) precisam da TUA avaliação!</li>
-                        <li>💬 Usa este ecrã para dar feedback personalizado ao aluno</li>
+                    <h3 style="color: #856404;">⚠️ INSTRUÇÕES</h3>
+                    <ul style="color: #856404; margin-left: 20px; line-height: 1.8;">
+                        <li>Dá pontos em cada resposta aberta</li>
+                        <li>Adiciona comentários para o aluno</li>
+                        <li>Clica em "💾 GUARDAR CORREÇÃO" no final</li>
+                        <li>A pontuação será atualizada automaticamente</li>
                     </ul>
                 </div>
 
-                <div class="detail-section">
-                    <h3>📊 Pontuações por Secção</h3>
-                    <div class="section-scores">
-                        <div class="section-score-card">
-                            <h4>📝 Relatório</h4>
-                            <div class="score">${resultado.pontuacoes.porSeccao.relatorio || 0}</div>
+                <div class="detail-section" style="border: 3px solid #2196f3;">
+                    <h3>📝 RELATÓRIO DO TEXTO (42 pontos)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Cada pergunta vale <strong>6 pontos</strong></p>
+            `;
+
+            const perguntas = {
+                q1: '1. Quem era Narciso e o que o tornava especial?',
+                q2: '2. O que disse o profeta Tirésias sobre o destino de Narciso?',
+                q3: '3. Como Narciso tratava as pessoas que se apaixonavam por ele?',
+                q4: '4. O que aconteceu a Eco depois de Narciso a rejeitar?',
+                q5: '5. Qual foi o castigo que Nêmesis aplicou a Narciso?',
+                q6: '6. O que aconteceu a Narciso no final da história?',
+                q7: '7. Que lição moral podemos tirar desta história?'
+            };
+
+            for (let q in perguntas) {
+                const resposta = (resultado.respostas && resultado.respostas.relatorio && resultado.respostas.relatorio[q]) || '';
+                const pontos = correcaoManual[q] || 0;
+                const comentario = resultado.comentarios?.[q] || '';
+                
+                html += `
+                    <div class="answer-item">
+                        <strong style="font-size: 1.1em; color: #1976d2;">${perguntas[q]}</strong>
+                        
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <p style="line-height: 1.6;">${resposta || '<em style="color: #999;">Não respondeu</em>'}</p>
                         </div>
-                        <div class="section-score-card">
-                            <h4>📊 Graus</h4>
-                            <div class="score">${resultado.pontuacoes.porSeccao.graus || 0}</div>
-                        </div>
-                        <div class="section-score-card">
-                            <h4>🔗 Conectores</h4>
-                            <div class="score">${resultado.pontuacoes.porSeccao.conectores || 0}</div>
-                        </div>
-                        <div class="section-score-card">
-                            <h4>🔄 Flexão</h4>
-                            <div class="score">${resultado.pontuacoes.porSeccao.flexao || 0}</div>
-                        </div>
-                        <div class="section-score-card">
-                            <h4>👨‍👩‍👧‍👦 Família</h4>
-                            <div class="score">${resultado.pontuacoes.porSeccao.familia || 0}</div>
+                        
+                        <div class="correction-box">
+                            <div class="correction-controls">
+                                <label>Pontos:</label>
+                                <input type="number" id="${q}_pontos" min="0" max="6" value="${pontos}" 
+                                       onchange="calcularTotal()" style="width: 80px;">
+                                <span style="font-weight: bold;">/6</span>
+                                
+                                <textarea id="${q}_comentario" placeholder="Comentário para o aluno (opcional)">${comentario}</textarea>
+                            </div>
                         </div>
                     </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // FRASES
+            html += `
+                <div class="detail-section" style="border: 3px solid #ff9800;">
+                    <h3>✍️ FRASES CRIADAS (18 pontos)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Cada frase vale <strong>6 pontos</strong></p>
+            `;
+
+            const frasesNomes = {
+                frase1: '1. Frase sobre a beleza de Narciso',
+                frase2: '2. Frase sobre o castigo',
+                frase3: '3. Frase com conector de oposição'
+            };
+
+            for (let f in frasesNomes) {
+                const resposta = (resultado.respostas && resultado.respostas.frases && resultado.respostas.frases[f]) || '';
+                const pontos = correcaoManual[f] || 0;
+                const comentario = resultado.comentarios?.[f] || '';
+                
+                html += `
+                    <div class="answer-item">
+                        <strong style="font-size: 1.1em; color: #e65100;">${frasesNomes[f]}</strong>
+                        
+                        <div style="background: #fff8e1; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <p style="line-height: 1.6;">${resposta || '<em style="color: #999;">Não escreveu</em>'}</p>
+                        </div>
+                        
+                        <div class="correction-box">
+                            <div class="correction-controls">
+                                <label>Pontos:</label>
+                                <input type="number" id="${f}_pontos" min="0" max="6" value="${pontos}" 
+                                       onchange="calcularTotal()" style="width: 80px;">
+                                <span style="font-weight: bold;">/6</span>
+                                
+                                <textarea id="${f}_comentario" placeholder="Comentário (opcional)">${comentario}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // CONOTATIVOS
+            html += `
+                <div class="detail-section" style="border: 3px solid #9c27b0;">
+                    <h3>💭 SENTIDOS CONOTATIVOS (15 pontos)</h3>
+                    <p style="margin-bottom: 15px; color: #666;">Cada resposta vale <strong>5 pontos</strong></p>
+            `;
+
+            const conotNomes = {
+                conot1: '"Coração de pedra"',
+                conot2: '"Perdeu-se em si mesmo"',
+                conot3: '"Águas cristalinas"'
+            };
+
+            for (let c in conotNomes) {
+                const resposta = (resultado.respostas && resultado.respostas.conotativos && resultado.respostas.conotativos[c]) || '';
+                const pontos = correcaoManual[c] || 0;
+                const comentario = resultado.comentarios?.[c] || '';
+                
+                html += `
+                    <div class="answer-item">
+                        <strong style="font-size: 1.1em; color: #7b1fa2;">${conotNomes[c]}</strong>
+                        
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <p style="line-height: 1.6;">${resposta || '<em style="color: #999;">Não respondeu</em>'}</p>
+                        </div>
+                        
+                        <div class="correction-box">
+                            <div class="correction-controls">
+                                <label>Pontos:</label>
+                                <input type="number" id="${c}_pontos" min="0" max="5" value="${pontos}" 
+                                       onchange="calcularTotal()" style="width: 80px;">
+                                <span style="font-weight: bold;">/5</span>
+                                
+                                <textarea id="${c}_comentario" placeholder="Comentário (opcional)">${comentario}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // Secções automáticas (resumo)
+            html += `
+                <div class="detail-section" style="background: #e8f5e9;">
+                    <h3>🤖 Pontuação Automática (25 pontos)</h3>
+                    <ul style="line-height: 2;">
+                        <li><strong>Graus:</strong> ${pontosGraus}/12 pontos</li>
+                        <li><strong>Conectores:</strong> ${pontosConectores}/5 pontos</li>
+                        <li><strong>Flexão:</strong> ${pontosFlexao}/6 pontos</li>
+                        <li><strong>Família:</strong> ${pontosFamilia}/2 pontos</li>
+                    </ul>
                 </div>
             `;
 
-            // ========== RELATÓRIO DO TEXTO ==========
+            // Botão guardar
             html += `
-                <div class="detail-section" style="border: 3px solid #f44336;">
-                    <h3 style="color: #f44336;">📝 RELATÓRIO DO TEXTO - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
-                    <p style="background: #ffebee; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                        <strong>⚠️ Estas respostas são ABERTAS e precisam da tua avaliação manual!</strong><br>
-                        Lê cada resposta e avalia se está completa, correta e demonstra compreensão.
-                    </p>
+                <button class="btn-save-correction" onclick="guardarCorrecao()">
+                    💾 GUARDAR CORREÇÃO
+                </button>
             `;
-
-            if (resultado.respostas && resultado.respostas.relatorio) {
-                const perguntas = {
-                    q1: '1. Quem era Narciso e o que o tornava especial?',
-                    q2: '2. O que disse o profeta Tirésias sobre o destino de Narciso?',
-                    q3: '3. Como Narciso tratava as pessoas que se apaixonavam por ele?',
-                    q4: '4. O que aconteceu a Eco depois de Narciso a rejeitar?',
-                    q5: '5. Qual foi o castigo que Nêmesis aplicou a Narciso?',
-                    q6: '6. O que aconteceu a Narciso no final da história?',
-                    q7: '7. Que lição moral podemos tirar desta história?'
-                };
-
-                for (let q in perguntas) {
-                    const resposta = resultado.respostas.relatorio[q] || '';
-                    const temResposta = resposta.trim().length > 0;
-                    const numPalavras = resposta.trim().split(/\s+/).filter(p => p.length > 0).length;
-                    const numCaracteres = resposta.length;
-                    
-                    html += `
-                        <div class="answer-item" style="border-left: 5px solid ${temResposta ? '#2196f3' : '#f44336'}; background: ${temResposta ? '#e3f2fd' : '#ffebee'};">
-                            <strong style="font-size: 1.1em; color: #1976d2;">${perguntas[q]}</strong>
-                            
-                            ${temResposta ? `
-                                <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #2196f3;">
-                                    <p style="font-size: 1.05em; line-height: 1.6; color: #333; white-space: pre-wrap;">${resposta}</p>
-                                </div>
-                                
-                                <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 0.9em; color: #666;">
-                                    <span>📊 <strong>${numPalavras}</strong> palavras</span>
-                                    <span>📝 <strong>${numCaracteres}</strong> caracteres</span>
-                                </div>
-                                
-                                <div style="background: #fff9c4; padding: 10px; border-radius: 5px; margin-top: 10px; border-left: 4px solid #fbc02d;">
-                                    <strong style="color: #f57c00;">📋 Para avaliar:</strong>
-                                    <p style="margin-top: 5px; color: #666; font-size: 0.95em;">
-                                        □ Completa  □ Correta  □ Demonstra compreensão  □ Vocabulário adequado
-                                    </p>
-                                </div>
-                            ` : `
-                                <div style="background: #ffcdd2; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                                    <p style="color: #c62828; font-weight: bold;">❌ NÃO RESPONDEU</p>
-                                </div>
-                            `}
-                        </div>
-                    `;
-                }
-            }
-            html += '</div>';
-
-            // ========== GRAUS DOS ADJETIVOS ==========
-            html += `
-                <div class="detail-section">
-                    <h3>📊 Graus dos Adjetivos (Avaliação Automática)</h3>
-                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.graus || 0}/100</strong></p>
-            `;
-
-            if (resultado.respostas && resultado.respostas.graus) {
-                const respostasCorretas = {
-                    'mais belo': '(comparativo de superioridade)',
-                    'belíssimo': '(superlativo absoluto sintético)',
-                    'tão frio como': '(comparativo de igualdade)',
-                    'menos vaidoso': '(comparativo de inferioridade)',
-                    'muito triste': '(superlativo absoluto analítico)',
-                    'cristalinas': '(grau normal)'
-                };
-
-                for (let correto in respostasCorretas) {
-                    const respostaAluno = resultado.respostas.graus[correto] || '';
-                    const acertou = respostaAluno.toLowerCase() === correto.toLowerCase();
-                    
-                    html += `
-                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
-                            <strong>${acertou ? '✅' : '❌'} ${correto} ${respostasCorretas[correto]}</strong>
-                            <p style="margin-top: 8px;">
-                                <strong>Resposta do aluno:</strong> 
-                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
-                                    ${respostaAluno || '(não respondeu)'}
-                                </span>
-                            </p>
-                            ${!acertou ? `
-                                <div style="background: #fff3e0; padding: 8px; border-radius: 5px; margin-top: 8px;">
-                                    <strong style="color: #e65100;">Correta:</strong> ${correto}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }
-            }
-            html += '</div>';
-
-            // ========== CONECTORES ==========
-            html += `
-                <div class="detail-section">
-                    <h3>🔗 Conectores Discursivos (Avaliação Automática)</h3>
-                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.conectores || 0}/100</strong></p>
-            `;
-
-            if (resultado.respostas && resultado.respostas.conectores) {
-                const questoes = {
-                    con1: { frase: 'Narciso era belo, _____ era vaidoso.', aceitas: ['mas', 'porém', 'contudo', 'todavia'] },
-                    con2: { frase: 'Eco apaixonou-se por Narciso _____ ele a rejeitou.', aceitas: ['mas', 'porém', 'todavia', 'contudo'] },
-                    con3: { frase: '_____ Narciso viu o seu reflexo, apaixonou-se.', aceitas: ['quando', 'logo que', 'assim que'] },
-                    con4: { frase: 'Narciso definhava _____ não conseguia deixar de olhar para o lago.', aceitas: ['porque', 'pois', 'uma vez que'] },
-                    con5: { frase: '_____, nasceu uma flor no lugar onde Narciso morreu.', aceitas: ['finalmente', 'por fim', 'no final', 'enfim'] }
-                };
-
-                for (let id in questoes) {
-                    const resposta = resultado.respostas.conectores[id] || '';
-                    const acertou = questoes[id].aceitas.some(a => a.toLowerCase() === resposta.toLowerCase());
-                    
-                    html += `
-                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
-                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].frase}</strong>
-                            <p style="margin-top: 8px;">
-                                <strong>Resposta:</strong> 
-                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
-                                    ${resposta || '(não respondeu)'}
-                                </span>
-                            </p>
-                            <div style="background: #e3f2fd; padding: 8px; border-radius: 5px; margin-top: 8px;">
-                                <strong>Aceites:</strong> ${questoes[id].aceitas.join(', ')}
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-            html += '</div>';
-
-            // ========== FLEXÃO ==========
-            html += `
-                <div class="detail-section">
-                    <h3>🔄 Flexão em Género e Número (Avaliação Automática)</h3>
-                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.flexao || 0}/100</strong></p>
-            `;
-
-            if (resultado.respostas && resultado.respostas.flexao) {
-                const questoes = {
-                    fem1: { original: 'O jovem belo → feminino', aceitas: ['a jovem bela', 'jovem bela'] },
-                    fem2: { original: 'O deus poderoso → feminino', aceitas: ['a deusa poderosa', 'deusa poderosa'] },
-                    fem3: { original: 'O profeta sábio → feminino', aceitas: ['a profetisa sábia', 'profetisa sábia'] },
-                    plur1: { original: 'A ninfa generosa → plural', aceitas: ['as ninfas generosas', 'ninfas generosas'] },
-                    plur2: { original: 'O lago transparente → plural', aceitas: ['os lagos transparentes', 'lagos transparentes'] },
-                    plur3: { original: 'A flor perfumada → plural', aceitas: ['as flores perfumadas', 'flores perfumadas'] }
-                };
-
-                for (let id in questoes) {
-                    const resposta = resultado.respostas.flexao[id] || '';
-                    const acertou = questoes[id].aceitas.some(a => a.toLowerCase() === resposta.toLowerCase());
-                    
-                    html += `
-                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
-                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].original}</strong>
-                            <p style="margin-top: 8px;">
-                                <strong>Resposta:</strong> 
-                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
-                                    ${resposta || '(não respondeu)'}
-                                </span>
-                            </p>
-                            ${!acertou ? `
-                                <div style="background: #fff3e0; padding: 8px; border-radius: 5px; margin-top: 8px;">
-                                    <strong style="color: #e65100;">Corretas:</strong> ${questoes[id].aceitas.join(' OU ')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }
-            }
-            html += '</div>';
-
-            // ========== FAMÍLIA DE PALAVRAS ==========
-            html += `
-                <div class="detail-section">
-                    <h3>👨‍👩‍👧‍👦 Família de Palavras (Avaliação Automática)</h3>
-                    <p style="margin-bottom: 15px; color: #666;">Pontuação: <strong>${resultado.pontuacoes.porSeccao.familia || 0}/100</strong></p>
-            `;
-
-            if (resultado.respostas && resultado.respostas.familia) {
-                const questoes = {
-                    fam1: { pergunta: 'Verbo da família de "belo"', exemplos: ['embelezar', 'embelezamento', 'aformosear'] },
-                    fam2: { pergunta: 'Adjetivo superlativo de "belo"', exemplos: ['belíssimo', 'beleza', 'formoso'] },
-                    fam3: { pergunta: 'Verbo da família de "amor"', exemplos: ['apaixonar', 'amar', 'enamorar'] },
-                    fam4: { pergunta: 'Advérbio da família de "amor"', exemplos: ['amorosamente', 'apaixonado', 'amado'] },
-                    fam5: { pergunta: 'Palavra composta de "água"', exemplos: ['aguaceiro', 'aguarela', 'aquoso'] },
-                    fam6: { pergunta: 'Outra palavra da família de "água"', exemplos: ['aguarela', 'aguaceiro', 'aquário'] },
-                    fam7: { pergunta: 'Nome coletivo de "flor"', exemplos: ['floresta', 'florido', 'florescer'] },
-                    fam8: { pergunta: 'Adjetivo da família de "flor"', exemplos: ['florido', 'floresta', 'floral'] }
-                };
-
-                for (let id in questoes) {
-                    const resposta = resultado.respostas.familia[id] || '';
-                    const acertou = questoes[id].exemplos.some(e => resposta.toLowerCase().includes(e.toLowerCase()));
-                    
-                    html += `
-                        <div class="answer-item" style="border-left-color: ${acertou ? '#4caf50' : '#f44336'}; background: ${acertou ? '#e8f5e9' : '#ffebee'};">
-                            <strong>${acertou ? '✅' : '❌'} ${questoes[id].pergunta}</strong>
-                            <p style="margin-top: 8px;">
-                                <strong>Resposta:</strong> 
-                                <span style="color: ${acertou ? '#2e7d32' : '#c62828'}; font-weight: bold; font-size: 1.1em;">
-                                    ${resposta || '(não respondeu)'}
-                                </span>
-                            </p>
-                            <div style="background: #e3f2fd; padding: 8px; border-radius: 5px; margin-top: 8px;">
-                                <strong>Exemplos corretos:</strong> ${questoes[id].exemplos.join(', ')}
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-            html += '</div>';
-
-            // ========== FRASES CRIADAS ==========
-            if (resultado.respostas && resultado.respostas.frases) {
-                html += `
-                    <div class="detail-section" style="border: 3px solid #ff9800;">
-                        <h3 style="color: #ff9800;">✍️ FRASES CRIADAS - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
-                        <p style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                            <strong>⚠️ Avalia: Criatividade, correção gramatical, adequação ao tema</strong>
-                        </p>
-                        
-                        <div class="answer-item" style="background: #fff8e1;">
-                            <strong style="font-size: 1.1em; color: #e65100;">1. Frase sobre a beleza de Narciso:</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase1 || '<em style="color: #999;">Não escreveu</em>'}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="answer-item" style="background: #fff8e1;">
-                            <strong style="font-size: 1.1em; color: #e65100;">2. Frase sobre o castigo:</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase2 || '<em style="color: #999;">Não escreveu</em>'}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="answer-item" style="background: #fff8e1;">
-                            <strong style="font-size: 1.1em; color: #e65100;">3. Frase com conector de oposição:</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #ff9800;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.frases.frase3 || '<em style="color: #999;">Não escreveu</em>'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // ========== SENTIDOS CONOTATIVOS ==========
-            if (resultado.respostas && resultado.respostas.conotativos) {
-                html += `
-                    <div class="detail-section" style="border: 3px solid #9c27b0;">
-                        <h3 style="color: #9c27b0;">💭 SENTIDOS CONOTATIVOS - AVALIAÇÃO MANUAL NECESSÁRIA</h3>
-                        <p style="background: #f3e5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                            <strong>⚠️ Avalia: Compreensão do sentido figurado, explicação adequada</strong>
-                        </p>
-                        
-                        <div class="answer-item" style="background: #f3e5f5;">
-                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Coração de pedra"</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot1 || '<em style="color: #999;">Não respondeu</em>'}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="answer-item" style="background: #f3e5f5;">
-                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Perdeu-se em si mesmo"</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot2 || '<em style="color: #999;">Não respondeu</em>'}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="answer-item" style="background: #f3e5f5;">
-                            <strong style="font-size: 1.1em; color: #7b1fa2;">"Águas cristalinas"</strong>
-                            <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #9c27b0;">
-                                <p style="font-size: 1.05em; line-height: 1.6;">${resultado.respostas.conotativos.conot3 || '<em style="color: #999;">Não respondeu</em>'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // ========== ANÁLISE =====
-            if (resultado.analise) {
-                html += `
-                    <div class="detail-section" style="background: #e8f5e9; border: 3px solid #4caf50;">
-                        <h3 style="color: #2e7d32;">📊 RESUMO DA AVALIAÇÃO</h3>
-                        ${resultado.analise.pontosFortes && resultado.analise.pontosFortes.length > 0 ? `
-                            <h4 style="color: #4caf50; margin: 15px 0 10px 0;">✅ Pontos Fortes:</h4>
-                            <ul style="margin-left: 20px; line-height: 1.8;">
-                                ${resultado.analise.pontosFortes.map(p => `<li>${p}</li>`).join('')}
-                            </ul>
-                        ` : ''}
-                        ${resultado.analise.areasmelhorar && resultado.analise.areasmelhorar.length > 0 ? `
-                            <h4 style="color: #ff9800; margin: 15px 0 10px 0;">📚 Áreas a Melhorar:</h4>
-                            <ul style="margin-left: 20px; line-height: 1.8;">
-                                ${resultado.analise.areasmelhorar.map(a => `<li>${a}</li>`).join('')}
-                            </ul>
-                        ` : ''}
-                        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #ff9800;">
-                            <strong style="color: #e65100;">💡 NOTA PARA O PROFESSOR:</strong>
-                            <p style="color: #e65100; margin-top: 5px;">
-                                A pontuação automática é ${resultado.pontuacoes.total}/100. As respostas abertas (relatório, frases, conotativos) precisam da tua avaliação manual para ajuste final da nota.
-                            </p>
-                        </div>
-                    </div>
-                `;
-            }
 
             content.innerHTML = html;
             modal.style.display = 'block';
             
-            console.log('✅ Modal aberto com sucesso!');
+            console.log('✅ Modal aberto');
+        }
+
+        function calcularTotal() {
+            let total = 0;
+
+            // Relatório (7 perguntas × 6 pontos)
+            for (let i = 1; i <= 7; i++) {
+                const input = document.getElementById(`q${i}_pontos`);
+                if (input) total += parseInt(input.value) || 0;
+            }
+
+            // Frases (3 × 6 pontos)
+            for (let i = 1; i <= 3; i++) {
+                const input = document.getElementById(`frase${i}_pontos`);
+                if (input) total += parseInt(input.value) || 0;
+            }
+
+            // Conotativos (3 × 5 pontos)
+            for (let i = 1; i <= 3; i++) {
+                const input = document.getElementById(`conot${i}_pontos`);
+                if (input) total += parseInt(input.value) || 0;
+            }
+
+            // Adicionar pontos automáticos (25 pontos)
+            const resultado = todosResultados.find(r => r.id === testeAtualId);
+            if (resultado) {
+                const pontosGraus = Math.round((resultado.pontuacoes.porSeccao.graus || 0) * 12 / 100);
+                const pontosConectores = Math.round((resultado.pontuacoes.porSeccao.conectores || 0) * 5 / 100);
+                const pontosFlexao = Math.round((resultado.pontuacoes.porSeccao.flexao || 0) * 6 / 100);
+                const pontosFamilia = Math.round((resultado.pontuacoes.porSeccao.familia || 0) * 2 / 100);
+                total += pontosGraus + pontosConectores + pontosFlexao + pontosFamilia;
+            }
+
+            const display = document.getElementById('pontuacaoDisplay');
+            if (display) {
+                display.textContent = `${total}/100`;
+            }
+
+            return total;
+        }
+
+        function guardarCorrecao() {
+            if (!testeAtualId) {
+                alert('❌ Erro: ID do teste não encontrado!');
+                return;
+            }
+
+            if (!confirm('💾 Guardar esta correção no Firebase?')) return;
+
+            // Coletar dados
+            const correcaoManual = {};
+            const comentarios = {};
+
+            // Relatório
+            for (let i = 1; i <= 7; i++) {
+                const q = `q${i}`;
+                correcaoManual[q] = parseInt(document.getElementById(`${q}_pontos`)?.value || 0);
+                comentarios[q] = document.getElementById(`${q}_comentario`)?.value || '';
+            }
+
+            // Frases
+            for (let i = 1; i <= 3; i++) {
+                const f = `frase${i}`;
+                correcaoManual[f] = parseInt(document.getElementById(`${f}_pontos`)?.value || 0);
+                comentarios[f] = document.getElementById(`${f}_comentario`)?.value || '';
+            }
+
+            // Conotativos
+            for (let i = 1; i <= 3; i++) {
+                const c = `conot${i}`;
+                correcaoManual[c] = parseInt(document.getElementById(`${c}_pontos`)?.value || 0);
+                comentarios[c] = document.getElementById(`${c}_comentario`)?.value || '';
+            }
+
+            const pontuacaoFinal = calcularTotal();
+
+            // Guardar no Firebase
+            const testeRef = database.ref('testes-narciso/' + testeAtualId);
+            testeRef.update({
+                correcaoManual: correcaoManual,
+                comentarios: comentarios,
+                pontuacaoFinal: pontuacaoFinal,
+                dataCorrecao: new Date().toISOString()
+            })
+            .then(() => {
+                alert('✅ Correção guardada com sucesso!');
+                fecharModal();
+                atualizarDados();
+            })
+            .catch((error) => {
+                alert('❌ Erro ao guardar: ' + error.message);
+            });
         }
 
         function fecharModal() {
-            const modal = document.getElementById('detailModal');
-            if (modal) {
-                modal.style.display = 'none';
-                console.log('✅ Modal fechado');
-            }
+            document.getElementById('detailModal').style.display = 'none';
+            testeAtualId = null;
         }
 
-        // Fechar modal ao clicar fora
         window.onclick = function(event) {
             const modal = document.getElementById('detailModal');
             if (event.target == modal) {
-                modal.style.display = 'none';
+                fecharModal();
             }
         }
 
-        // ===== FILTROS =====
         function filtrarResultados() {
             const filterTurma = document.getElementById('filterTurma').value.trim().toLowerCase();
             const filterPontuacao = document.getElementById('filterPontuacao').value;
@@ -1034,7 +942,7 @@
                 }
 
                 if (filterPontuacao) {
-                    const pontuacao = resultado.pontuacoes.total;
+                    const pontuacao = resultado.pontuacaoFinal || resultado.pontuacoes.total || 0;
                     if (filterPontuacao === '80-100' && pontuacao < 80) return false;
                     if (filterPontuacao === '60-79' && (pontuacao < 60 || pontuacao >= 80)) return false;
                     if (filterPontuacao === '0-59' && pontuacao >= 60) return false;
@@ -1058,40 +966,31 @@
             filtrarResultados();
         }
 
-        // ===== EXPORTAÇÃO =====
         function exportarCSV() {
             if (resultadosFiltrados.length === 0) {
                 alert('Não há dados para exportar!');
                 return;
             }
 
-            let csv = 'Nome,Turma,Data,Hora,Pontuação Total,Relatório,Graus,Conectores,Flexão,Família\n';
+            let csv = 'Nome,Turma,Data,Pontuação Final\n';
 
             resultadosFiltrados.forEach(resultado => {
                 const dataFim = new Date(resultado.aluno.dataFim);
                 const data = dataFim.toLocaleDateString('pt-PT');
-                const hora = dataFim.toLocaleTimeString('pt-PT');
-                const pontuacoes = resultado.pontuacoes.porSeccao;
+                const pontuacao = resultado.pontuacaoFinal || resultado.pontuacoes.total || 0;
 
-                csv += `"${resultado.aluno.nome}","${resultado.aluno.turma}","${data}","${hora}",`;
-                csv += `${resultado.pontuacoes.total},${pontuacoes.relatorio || 0},${pontuacoes.graus || 0},`;
-                csv += `${pontuacoes.conectores || 0},${pontuacoes.flexao || 0},${pontuacoes.familia || 0}\n`;
+                csv += `"${resultado.aluno.nome}","${resultado.aluno.turma}","${data}",${pontuacao}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `resultados_narciso_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('download', `correcoes_narciso_${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-
-        function exportarPDF() {
-            alert('Para exportar para PDF, usa a função de impressão do navegador (Ctrl+P) e escolhe "Guardar como PDF".');
-            window.print();
         }
 
         function atualizarDados() {
