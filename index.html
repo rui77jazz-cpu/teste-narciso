@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -486,13 +487,13 @@
         <div id="studentInfoDisplay" class="student-info" style="display: none;">
             <p>👤 <span id="displayName"></span></p>
             <p>📚 Turma: <span id="displayClass"></span></p>
-            <button onclick="trocarAluno()" style="background:#ff9800;color:white;border:none;padding:8px 15px;border-radius:8px;cursor:pointer;margin-top:10px;font-weight:bold;font-size:0.9em;width:100%;">🔄 Trocar Aluno</button>
         </div>
 
         <!-- Pontuação (visível após login) -->
         <div id="scoreDisplay" class="score-display" style="display: none;">
             <h3>Pontuação</h3>
             <div class="score-number"><span id="totalScore">0</span>/100</div>
+            <button onclick="trocarAluno()" style="background:#ff9800;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:15px;font-weight:bold;font-size:0.95em;transition:all 0.3s;">🔄 Trocar Aluno</button>
         </div>
 
         <!-- Menu Principal -->
@@ -650,31 +651,96 @@
         <!-- Secção: Conectores -->
         <div id="conectores" class="section">
             <h2>🔗 Conectores Discursivos</h2>
-            <p style="margin-bottom: 20px;">Completa as frases com os conectores adequados:</p>
+            <p style="margin-bottom: 20px;">Escolhe o conector correto para cada frase:</p>
             
             <div class="question">
-                <p class="question-text">1. Narciso era belo, <input type="text" id="con1" style="display: inline; width: 150px;"> era vaidoso.</p>
-                <small>(mas / porém / contudo)</small>
+                <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">1. Narciso era belo, _____ era vaidoso.</p>
+                <div style="margin-left: 20px;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con1" value="e" style="margin-right: 10px;"> e
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con1" value="mas" style="margin-right: 10px;"> mas
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con1" value="quando" style="margin-right: 10px;"> quando
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con1" value="porque" style="margin-right: 10px;"> porque
+                    </label>
+                </div>
             </div>
 
             <div class="question">
-                <p class="question-text">2. Eco apaixonou-se por Narciso <input type="text" id="con2" style="display: inline; width: 150px;"> ele a rejeitou.</p>
-                <small>(mas / porém / todavia)</small>
+                <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">2. Eco apaixonou-se por Narciso _____ ele a rejeitou.</p>
+                <div style="margin-left: 20px;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con2" value="quando" style="margin-right: 10px;"> quando
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con2" value="porque" style="margin-right: 10px;"> porque
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con2" value="mas" style="margin-right: 10px;"> mas
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con2" value="depois" style="margin-right: 10px;"> depois
+                    </label>
+                </div>
             </div>
 
             <div class="question">
-                <p class="question-text">3. <input type="text" id="con3" style="display: inline; width: 150px;"> Narciso viu o seu reflexo, apaixonou-se.</p>
-                <small>(quando / logo que / assim que)</small>
+                <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">3. _____ Narciso viu o seu reflexo, apaixonou-se.</p>
+                <div style="margin-left: 20px;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con3" value="porque" style="margin-right: 10px;"> porque
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con3" value="mas" style="margin-right: 10px;"> mas
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con3" value="quando" style="margin-right: 10px;"> quando
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con3" value="se" style="margin-right: 10px;"> se
+                    </label>
+                </div>
             </div>
 
             <div class="question">
-                <p class="question-text">4. Narciso definhava <input type="text" id="con4" style="display: inline; width: 150px;"> não conseguia deixar de olhar para o lago.</p>
-                <small>(porque / pois / uma vez que)</small>
+                <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">4. Narciso definhava _____ não conseguia deixar de olhar para o lago.</p>
+                <div style="margin-left: 20px;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con4" value="quando" style="margin-right: 10px;"> quando
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con4" value="mas" style="margin-right: 10px;"> mas
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con4" value="porque" style="margin-right: 10px;"> porque
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con4" value="então" style="margin-right: 10px;"> então
+                    </label>
+                </div>
             </div>
 
             <div class="question">
-                <p class="question-text">5. <input type="text" id="con5" style="display: inline; width: 150px;">, nasceu uma flor no lugar onde Narciso morreu.</p>
-                <small>(finalmente / por fim / no final)</small>
+                <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">5. _____, nasceu uma flor no lugar onde Narciso morreu.</p>
+                <div style="margin-left: 20px;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con5" value="mas" style="margin-right: 10px;"> mas
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con5" value="quando" style="margin-right: 10px;"> quando
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con5" value="porque" style="margin-right: 10px;"> porque
+                    </label>
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                        <input type="radio" name="con5" value="finalmente" style="margin-right: 10px;"> finalmente
+                    </label>
+                </div>
             </div>
 
             <button class="btn" onclick="checkConectores()">Verificar Respostas</button>
@@ -916,6 +982,14 @@
                 field.style.borderColor = '#ddd';
             });
             
+            // Limpar radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+                radio.parentElement.style.background = '';
+                radio.parentElement.style.fontWeight = '';
+                radio.parentElement.style.borderLeft = '';
+            });
+            
             // Limpar drop zones
             document.querySelectorAll('.drop-zone').forEach(zone => {
                 zone.textContent = '';
@@ -1112,44 +1186,41 @@
 
         // Verificação dos Conectores
         function checkConectores() {
-            const answers = {
-                con1: ['mas', 'porém', 'porem', 'contudo', 'todavia'],
-                con2: ['mas', 'porém', 'porem', 'todavia', 'contudo'],
-                con3: ['quando', 'logo que', 'assim que', 'logo-que', 'assim-que'],
-                con4: ['porque', 'pois', 'uma vez que', 'visto que', 'já que'],
-                con5: ['finalmente', 'por fim', 'no final', 'enfim', 'por-fim']
+            const correctAnswers = {
+                con1: 'mas',
+                con2: 'mas',
+                con3: 'quando',
+                con4: 'porque',
+                con5: 'finalmente'
             };
 
             let correct = 0;
-            let total = Object.keys(answers).length;
+            let total = Object.keys(correctAnswers).length;
 
-            for (let id in answers) {
-                const input = document.getElementById(id);
-                let value = input.value.trim().toLowerCase();
+            for (let id in correctAnswers) {
+                const selected = document.querySelector(`input[name="${id}"]:checked`);
                 
-                // Remover espaços extras e normalizar
-                value = value.replace(/\s+/g, ' ');
-                
-                // Remover acentos para comparação mais flexível
-                const valorNormalizado = value
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '');
-                
-                // Normalizar respostas aceites também
-                const respostasNormalizadas = answers[id].map(r => 
-                    r.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                );
-                
-                studentAnswers.conectores[id] = value;
-                
-                // Verificar se a resposta (normalizada) está nas respostas aceites (normalizadas)
-                const acertou = respostasNormalizadas.includes(valorNormalizado);
-                
-                if (acertou) {
-                    input.style.borderColor = '#4caf50';
-                    correct++;
-                } else if (value !== '') {
-                    input.style.borderColor = '#f44336';
+                if (selected) {
+                    const value = selected.value;
+                    studentAnswers.conectores[id] = value;
+                    
+                    // Destacar a opção selecionada
+                    const label = selected.parentElement;
+                    const allLabels = document.querySelectorAll(`input[name="${id}"]`).forEach(radio => {
+                        radio.parentElement.style.background = '';
+                        radio.parentElement.style.fontWeight = '';
+                    });
+                    
+                    if (value === correctAnswers[id]) {
+                        label.style.background = '#e8f5e9';
+                        label.style.fontWeight = 'bold';
+                        label.style.borderLeft = '4px solid #4caf50';
+                        correct++;
+                    } else {
+                        label.style.background = '#ffebee';
+                        label.style.fontWeight = 'bold';
+                        label.style.borderLeft = '4px solid #f44336';
+                    }
                 }
             }
 
