@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -316,6 +317,11 @@
             color: white;
         }
 
+        .feedback.info {
+            background: #2196f3;
+            color: white;
+        }
+
         .score-display {
             position: fixed;
             top: 20px;
@@ -417,6 +423,17 @@
             line-height: 1.8;
         }
 
+        .manual-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+            font-weight: bold;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -492,6 +509,7 @@
         <div id="scoreDisplay" class="score-display" style="display: none;">
             <h3>Pontuação</h3>
             <div class="score-number"><span id="totalScore">0</span>/100</div>
+            <p style="font-size: 0.8em; color: #666; margin-top: 5px;">(Automática: Graus + Conectores)</p>
             <button onclick="trocarAluno()" style="background:#ff9800;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:15px;font-weight:bold;font-size:0.95em;transition:all 0.3s;">🔄 Trocar Aluno</button>
         </div>
 
@@ -548,9 +566,13 @@
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
         </div>
 
-        <!-- Secção: Relatório do Texto -->
+        <!-- Secção: Relatório do Texto (6 perguntas - correção manual) -->
         <div id="relatorio" class="section">
             <h2>📝 Relatório do Texto</h2>
+            
+            <div class="manual-notice">
+                ⚠️ Esta secção será avaliada pelo professor (30 pontos)
+            </div>
             
             <div class="question">
                 <p class="question-text"><strong>1.</strong> O que disse o profeta Tirésias sobre o destino de Narciso?</p>
@@ -582,12 +604,12 @@
                 <textarea id="q6" placeholder="Escreve a tua resposta aqui..."></textarea>
             </div>
 
-            <button class="btn" onclick="checkRelatorio()">Verificar Respostas</button>
+            <button class="btn" onclick="guardarRelatorio()">💾 Guardar Respostas</button>
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
             <div id="relatorioFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Graus dos Adjetivos -->
+        <!-- Secção: Graus dos Adjetivos (correção automática - 15 pontos) -->
         <div id="graus" class="section">
             <h2>📊 Graus dos Adjetivos</h2>
             <p style="margin-bottom: 20px;">Arrasta os adjetivos para completar as frases corretamente:</p>
@@ -642,7 +664,7 @@
             <div id="grausFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Conectores -->
+        <!-- Secção: Conectores (correção automática - 10 pontos) -->
         <div id="conectores" class="section">
             <h2>🔗 Conectores Discursivos</h2>
             <p style="margin-bottom: 20px;">Escolhe o conector correto para cada frase:</p>
@@ -650,16 +672,16 @@
             <div class="question">
                 <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">1. Narciso era belo, _____ era vaidoso.</p>
                 <div style="margin-left: 20px;">
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con1" value="e" style="margin-right: 10px;"> e
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con1" value="mas" style="margin-right: 10px;"> mas
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con1" value="quando" style="margin-right: 10px;"> quando
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con1" value="porque" style="margin-right: 10px;"> porque
                     </label>
                 </div>
@@ -668,16 +690,16 @@
             <div class="question">
                 <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">2. Eco apaixonou-se por Narciso _____ ele a rejeitou.</p>
                 <div style="margin-left: 20px;">
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con2" value="quando" style="margin-right: 10px;"> quando
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con2" value="porque" style="margin-right: 10px;"> porque
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con2" value="mas" style="margin-right: 10px;"> mas
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con2" value="depois" style="margin-right: 10px;"> depois
                     </label>
                 </div>
@@ -686,16 +708,16 @@
             <div class="question">
                 <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">3. _____ Narciso viu o seu reflexo, apaixonou-se.</p>
                 <div style="margin-left: 20px;">
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con3" value="porque" style="margin-right: 10px;"> porque
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con3" value="mas" style="margin-right: 10px;"> mas
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con3" value="quando" style="margin-right: 10px;"> quando
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con3" value="se" style="margin-right: 10px;"> se
                     </label>
                 </div>
@@ -704,16 +726,16 @@
             <div class="question">
                 <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">4. Narciso definhava _____ não conseguia deixar de olhar para o lago.</p>
                 <div style="margin-left: 20px;">
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con4" value="quando" style="margin-right: 10px;"> quando
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con4" value="mas" style="margin-right: 10px;"> mas
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con4" value="porque" style="margin-right: 10px;"> porque
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con4" value="então" style="margin-right: 10px;"> então
                     </label>
                 </div>
@@ -722,16 +744,16 @@
             <div class="question">
                 <p class="question-text" style="font-weight: bold; margin-bottom: 15px;">5. _____, nasceu uma flor no lugar onde Narciso morreu.</p>
                 <div style="margin-left: 20px;">
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con5" value="mas" style="margin-right: 10px;"> mas
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con5" value="quando" style="margin-right: 10px;"> quando
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con5" value="porque" style="margin-right: 10px;"> porque
                     </label>
-                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0;">
+                    <label style="display: block; padding: 8px; cursor: pointer; margin: 5px 0; border-radius: 5px;">
                         <input type="radio" name="con5" value="finalmente" style="margin-right: 10px;"> finalmente
                     </label>
                 </div>
@@ -742,73 +764,85 @@
             <div id="conectoresFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Flexão -->
+        <!-- Secção: Flexão (correção manual - 12 pontos) -->
         <div id="flexao" class="section">
             <h2>🔄 Flexão em Género e Número</h2>
             
+            <div class="manual-notice">
+                ⚠️ Esta secção será avaliada pelo professor (12 pontos)
+            </div>
+            
             <h3>Passa para o feminino:</h3>
             <div class="question">
-                <p class="question-text">1. O jovem belo → <input type="text" id="fem1"></p>
+                <p class="question-text">1. O jovem belo → <input type="text" id="fem1" placeholder="Escreve aqui..."></p>
             </div>
             <div class="question">
-                <p class="question-text">2. O deus poderoso → <input type="text" id="fem2"></p>
+                <p class="question-text">2. O deus poderoso → <input type="text" id="fem2" placeholder="Escreve aqui..."></p>
             </div>
             <div class="question">
-                <p class="question-text">3. O profeta sábio → <input type="text" id="fem3"></p>
+                <p class="question-text">3. O profeta sábio → <input type="text" id="fem3" placeholder="Escreve aqui..."></p>
             </div>
 
             <h3>Passa para o plural:</h3>
             <div class="question">
-                <p class="question-text">4. A ninfa generosa → <input type="text" id="plur1"></p>
+                <p class="question-text">4. A ninfa generosa → <input type="text" id="plur1" placeholder="Escreve aqui..."></p>
             </div>
             <div class="question">
-                <p class="question-text">5. O lago transparente → <input type="text" id="plur2"></p>
+                <p class="question-text">5. O lago transparente → <input type="text" id="plur2" placeholder="Escreve aqui..."></p>
             </div>
             <div class="question">
-                <p class="question-text">6. A flor perfumada → <input type="text" id="plur3"></p>
+                <p class="question-text">6. A flor perfumada → <input type="text" id="plur3" placeholder="Escreve aqui..."></p>
             </div>
 
-            <button class="btn" onclick="checkFlexao()">Verificar Respostas</button>
+            <button class="btn" onclick="guardarFlexao()">💾 Guardar Respostas</button>
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
             <div id="flexaoFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Família de Palavras -->
+        <!-- Secção: Família de Palavras (correção manual - 16 pontos) -->
         <div id="familia" class="section">
             <h2>👨‍👩‍👧‍👦 Família de Palavras</h2>
             
+            <div class="manual-notice">
+                ⚠️ Esta secção será avaliada pelo professor (16 pontos)
+            </div>
+            
             <div class="question">
                 <p class="question-text"><strong>Família de "belo":</strong></p>
-                <p>1. Escreve um verbo da família de "belo": <input type="text" id="fam1"></p>
-                <p>2. Escreve um adjetivo no superlativo: <input type="text" id="fam2"></p>
+                <p>1. Escreve um verbo da família de "belo": <input type="text" id="fam1" placeholder="Escreve aqui..."></p>
+                <p style="margin-top: 10px;">2. Escreve um adjetivo no superlativo: <input type="text" id="fam2" placeholder="Escreve aqui..."></p>
             </div>
 
             <div class="question">
                 <p class="question-text"><strong>Família de "amor":</strong></p>
-                <p>3. Escreve um verbo da família de "amor": <input type="text" id="fam3"></p>
-                <p>4. Escreve um advérbio: <input type="text" id="fam4"></p>
+                <p>3. Escreve um verbo da família de "amor": <input type="text" id="fam3" placeholder="Escreve aqui..."></p>
+                <p style="margin-top: 10px;">4. Escreve um advérbio: <input type="text" id="fam4" placeholder="Escreve aqui..."></p>
             </div>
 
             <div class="question">
                 <p class="question-text"><strong>Família de "água":</strong></p>
-                <p>5. Escreve uma palavra composta: <input type="text" id="fam5"></p>
-                <p>6. Escreve outra palavra da família: <input type="text" id="fam6"></p>
+                <p>5. Escreve uma palavra composta: <input type="text" id="fam5" placeholder="Escreve aqui..."></p>
+                <p style="margin-top: 10px;">6. Escreve outra palavra da família: <input type="text" id="fam6" placeholder="Escreve aqui..."></p>
             </div>
 
             <div class="question">
                 <p class="question-text"><strong>Família de "flor":</strong></p>
-                <p>7. Escreve um nome coletivo: <input type="text" id="fam7"></p>
-                <p>8. Escreve um adjetivo: <input type="text" id="fam8"></p>
+                <p>7. Escreve um nome coletivo: <input type="text" id="fam7" placeholder="Escreve aqui..."></p>
+                <p style="margin-top: 10px;">8. Escreve um adjetivo: <input type="text" id="fam8" placeholder="Escreve aqui..."></p>
             </div>
 
-            <button class="btn" onclick="checkFamilia()">Verificar Respostas</button>
+            <button class="btn" onclick="guardarFamilia()">💾 Guardar Respostas</button>
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
             <div id="familiaFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Escrever Frases -->
+        <!-- Secção: Escrever Frases (correção manual - 12 pontos) -->
         <div id="frases" class="section">
             <h2>✍️ Escrever Frases</h2>
+            
+            <div class="manual-notice">
+                ⚠️ Esta secção será avaliada pelo professor (12 pontos)
+            </div>
             
             <div class="question">
                 <p class="question-text">1. Escreve uma frase sobre a beleza de Narciso:</p>
@@ -825,14 +859,18 @@
                 <textarea id="frase3" placeholder="A tua frase..."></textarea>
             </div>
 
-            <button class="btn" onclick="saveFrases()">Guardar Frases</button>
+            <button class="btn" onclick="guardarFrases()">💾 Guardar Frases</button>
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
-            <div id="frasesFeedback" class="feedback success" style="display: none;">✅ Frases guardadas com sucesso!</div>
+            <div id="frasesFeedback" class="feedback" style="display: none;"></div>
         </div>
 
-        <!-- Secção: Sentidos Conotativos -->
+        <!-- Secção: Sentidos Conotativos (correção manual - 5 pontos) -->
         <div id="conotativos" class="section">
             <h2>💭 Sentidos Conotativos</h2>
+            
+            <div class="manual-notice">
+                ⚠️ Esta secção será avaliada pelo professor (5 pontos)
+            </div>
             
             <div class="question">
                 <p class="question-text">Explica o sentido das seguintes expressões do texto:</p>
@@ -840,16 +878,16 @@
                 <p><strong>1. "coração de pedra"</strong> (quando se diz que Narciso tinha coração frio)</p>
                 <textarea id="conot1" placeholder="O que significa esta expressão?"></textarea>
                 
-                <p><strong>2. "perdeu-se em si mesmo"</strong></p>
+                <p style="margin-top: 15px;"><strong>2. "perdeu-se em si mesmo"</strong></p>
                 <textarea id="conot2" placeholder="O que significa esta expressão?"></textarea>
                 
-                <p><strong>3. "águas cristalinas"</strong></p>
+                <p style="margin-top: 15px;"><strong>3. "águas cristalinas"</strong></p>
                 <textarea id="conot3" placeholder="O que significa esta expressão?"></textarea>
             </div>
 
-            <button class="btn" onclick="saveConotativos()">Guardar Respostas</button>
+            <button class="btn" onclick="guardarConotativos()">💾 Guardar Respostas</button>
             <button class="btn btn-back" onclick="showSection('menuSection')">🏠 Voltar ao Menu</button>
-            <div id="conotativosFeedback" class="feedback success" style="display: none;">✅ Respostas guardadas com sucesso!</div>
+            <div id="conotativosFeedback" class="feedback" style="display: none;"></div>
         </div>
 
         <!-- Relatório Final -->
@@ -861,7 +899,10 @@
                     <h3>Turma: <span id="reportTurma"></span></h3>
                     <h3>Data: <span id="reportData"></span></h3>
                     <p style="font-size: 1.5em; color: #667eea; margin-top: 10px;">
-                        <strong>Pontuação Total: <span id="reportTotalScore">0</span>/100</strong>
+                        <strong>Pontuação Automática: <span id="reportTotalScore">0</span>/25</strong>
+                    </p>
+                    <p style="font-size: 1.1em; color: #666; margin-top: 5px;">
+                        (Pontuação final será calculada após correção do professor)
                     </p>
                 </div>
 
@@ -870,43 +911,56 @@
                     <thead>
                         <tr>
                             <th>Secção</th>
-                            <th>Pontuação</th>
-                            <th>Estado</th>
+                            <th>Pontos</th>
+                            <th>Tipo</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>📝 Relatório do Texto</td>
-                            <td id="reportRelatorio">-</td>
-                            <td id="statusRelatorio">-</td>
+                            <td>0-30</td>
+                            <td style="color: #ff9800;">⏳ Aguarda Professor</td>
                         </tr>
                         <tr>
                             <td>📊 Graus dos Adjetivos</td>
                             <td id="reportGraus">-</td>
-                            <td id="statusGraus">-</td>
+                            <td style="color: #4caf50;">✅ Automático</td>
                         </tr>
                         <tr>
                             <td>🔗 Conectores Discursivos</td>
                             <td id="reportConectores">-</td>
-                            <td id="statusConectores">-</td>
+                            <td style="color: #4caf50;">✅ Automático</td>
                         </tr>
                         <tr>
                             <td>🔄 Flexão em Género e Número</td>
-                            <td id="reportFlexao">-</td>
-                            <td id="statusFlexao">-</td>
+                            <td>0-12</td>
+                            <td style="color: #ff9800;">⏳ Aguarda Professor</td>
                         </tr>
                         <tr>
                             <td>👨‍👩‍👧‍👦 Família de Palavras</td>
-                            <td id="reportFamilia">-</td>
-                            <td id="statusFamilia">-</td>
+                            <td>0-16</td>
+                            <td style="color: #ff9800;">⏳ Aguarda Professor</td>
+                        </tr>
+                        <tr>
+                            <td>✍️ Frases Criadas</td>
+                            <td>0-12</td>
+                            <td style="color: #ff9800;">⏳ Aguarda Professor</td>
+                        </tr>
+                        <tr>
+                            <td>💭 Sentidos Conotativos</td>
+                            <td>0-5</td>
+                            <td style="color: #ff9800;">⏳ Aguarda Professor</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="analysis-section">
-                    <div id="pontosFortes"></div>
-                    <div id="areasmelhorar"></div>
-                    <div id="comentarioFinal"></div>
+                    <h4 style="color: #2E5090;">📋 Resumo da Distribuição de Pontos:</h4>
+                    <ul style="line-height: 2;">
+                        <li><strong>Automático (25 pontos):</strong> Graus (15) + Conectores (10)</li>
+                        <li><strong>Manual (75 pontos):</strong> Relatório (30) + Flexão (12) + Família (16) + Frases (12) + Conotativos (5)</li>
+                        <li><strong>Total:</strong> 100 pontos</li>
+                    </ul>
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
@@ -947,14 +1001,11 @@
             sessionId: null
         };
 
-        // Pontuação
+        // Pontuação (só automática: Graus 15 + Conectores 10 = 25)
         let totalScore = 0;
         let sectionScores = {
-            relatorio: 0,
             graus: 0,
-            conectores: 0,
-            flexao: 0,
-            familia: 0
+            conectores: 0
         };
 
         // Respostas do aluno
@@ -990,14 +1041,14 @@
                 zone.classList.remove('filled', 'correct', 'incorrect');
             });
             
+            // Restaurar draggables
+            resetDraggables();
+            
             // Resetar pontuações
             totalScore = 0;
             sectionScores = {
-                relatorio: 0,
                 graus: 0,
-                conectores: 0,
-                flexao: 0,
-                familia: 0
+                conectores: 0
             };
             
             // Limpar respostas
@@ -1020,6 +1071,21 @@
             console.log('✅ Dados limpos!');
         }
 
+        function resetDraggables() {
+            const container = document.getElementById('grausDragContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="draggable" draggable="true">mais belo</div>
+                    <div class="draggable" draggable="true">belíssimo</div>
+                    <div class="draggable" draggable="true">tão frio como</div>
+                    <div class="draggable" draggable="true">menos vaidoso</div>
+                    <div class="draggable" draggable="true">muito triste</div>
+                    <div class="draggable" draggable="true">cristalinas</div>
+                `;
+                setupDragAndDrop();
+            }
+        }
+
         function trocarAluno() {
             if (confirm('⚠️ Vais trocar de aluno.\n\nTodos os dados não guardados serão perdidos!\n\nSe ainda não enviaste os resultados, clica em CANCELAR.\n\nContinuar?')) {
                 limparTodosDados();
@@ -1037,7 +1103,7 @@
             e.preventDefault();
             
             const name = document.getElementById('studentName').value.trim();
-            const studentClass = document.getElementById('studentClass').value;
+            const studentClass = document.getElementById('studentClass').value.trim();
             
             if (name && studentClass) {
                 // IMPORTANTE: Limpar dados antes de começar novo teste
@@ -1113,32 +1179,137 @@
         // Inicializar drag and drop quando a página carrega
         window.addEventListener('load', setupDragAndDrop);
 
-        // ===== VERIFICAÇÃO DAS RESPOSTAS =====
+        // ===== GUARDAR RESPOSTAS (Secções Manuais - SEM pontos) =====
 
-        // Verificação do Relatório
-        function checkRelatorio() {
+        // Guardar Relatório (30 pontos - manual)
+        function guardarRelatorio() {
             const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
             let answered = 0;
             
             questions.forEach(id => {
                 const value = document.getElementById(id).value.trim();
                 studentAnswers.relatorio[id] = value;
-                if (value.length > 10) answered++;
+                if (value.length > 5) answered++;
             });
 
             const feedback = document.getElementById('relatorioFeedback');
             
             if (answered === questions.length) {
                 feedback.className = 'feedback success';
-                feedback.textContent = `✅ Parabéns! Respondeste a todas as perguntas! (O professor irá avaliar)`;
+                feedback.textContent = `✅ Respostas guardadas! (${answered}/${questions.length}) - Aguarda correção do professor.`;
+            } else if (answered > 0) {
+                feedback.className = 'feedback info';
+                feedback.textContent = `💾 Guardado ${answered} de ${questions.length} respostas. Completa as restantes!`;
             } else {
                 feedback.className = 'feedback error';
-                feedback.textContent = `Respondeste ${answered} de ${questions.length} perguntas.`;
+                feedback.textContent = `❌ Escreve pelo menos uma resposta!`;
             }
             feedback.style.display = 'block';
         }
 
-        // Verificação dos Graus
+        // Guardar Flexão (12 pontos - manual)
+        function guardarFlexao() {
+            const fields = ['fem1', 'fem2', 'fem3', 'plur1', 'plur2', 'plur3'];
+            let answered = 0;
+            
+            fields.forEach(id => {
+                const value = document.getElementById(id).value.trim();
+                studentAnswers.flexao[id] = value;
+                if (value.length > 0) answered++;
+            });
+
+            const feedback = document.getElementById('flexaoFeedback');
+            
+            if (answered === fields.length) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `✅ Respostas guardadas! (${answered}/${fields.length}) - Aguarda correção do professor.`;
+            } else if (answered > 0) {
+                feedback.className = 'feedback info';
+                feedback.textContent = `💾 Guardado ${answered} de ${fields.length} respostas. Completa as restantes!`;
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `❌ Escreve pelo menos uma resposta!`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Guardar Família (16 pontos - manual)
+        function guardarFamilia() {
+            const fields = ['fam1', 'fam2', 'fam3', 'fam4', 'fam5', 'fam6', 'fam7', 'fam8'];
+            let answered = 0;
+            
+            fields.forEach(id => {
+                const value = document.getElementById(id).value.trim();
+                studentAnswers.familia[id] = value;
+                if (value.length > 0) answered++;
+            });
+
+            const feedback = document.getElementById('familiaFeedback');
+            
+            if (answered === fields.length) {
+                feedback.className = 'feedback success';
+                feedback.textContent = `✅ Respostas guardadas! (${answered}/${fields.length}) - Aguarda correção do professor.`;
+            } else if (answered > 0) {
+                feedback.className = 'feedback info';
+                feedback.textContent = `💾 Guardado ${answered} de ${fields.length} respostas. Completa as restantes!`;
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = `❌ Escreve pelo menos uma resposta!`;
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Guardar Frases (12 pontos - manual)
+        function guardarFrases() {
+            studentAnswers.frases = {
+                frase1: document.getElementById('frase1').value.trim(),
+                frase2: document.getElementById('frase2').value.trim(),
+                frase3: document.getElementById('frase3').value.trim()
+            };
+            
+            let answered = Object.values(studentAnswers.frases).filter(v => v.length > 5).length;
+            
+            const feedback = document.getElementById('frasesFeedback');
+            if (answered === 3) {
+                feedback.className = 'feedback success';
+                feedback.textContent = '✅ Frases guardadas! Aguarda correção do professor.';
+            } else if (answered > 0) {
+                feedback.className = 'feedback info';
+                feedback.textContent = `💾 Guardado ${answered} de 3 frases. Completa as restantes!`;
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = '❌ Escreve pelo menos uma frase!';
+            }
+            feedback.style.display = 'block';
+        }
+
+        // Guardar Conotativos (5 pontos - manual)
+        function guardarConotativos() {
+            studentAnswers.conotativos = {
+                conot1: document.getElementById('conot1').value.trim(),
+                conot2: document.getElementById('conot2').value.trim(),
+                conot3: document.getElementById('conot3').value.trim()
+            };
+            
+            let answered = Object.values(studentAnswers.conotativos).filter(v => v.length > 5).length;
+            
+            const feedback = document.getElementById('conotativosFeedback');
+            if (answered === 3) {
+                feedback.className = 'feedback success';
+                feedback.textContent = '✅ Respostas guardadas! Aguarda correção do professor.';
+            } else if (answered > 0) {
+                feedback.className = 'feedback info';
+                feedback.textContent = `💾 Guardado ${answered} de 3 respostas. Completa as restantes!`;
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = '❌ Escreve pelo menos uma resposta!';
+            }
+            feedback.style.display = 'block';
+        }
+
+        // ===== VERIFICAÇÃO AUTOMÁTICA (Graus e Conectores) =====
+
+        // Verificação dos Graus (15 pontos - automático)
         function checkGraus() {
             const dropZones = document.querySelectorAll('#graus .drop-zone');
             let correct = 0;
@@ -1161,21 +1332,24 @@
             });
 
             const feedback = document.getElementById('grausFeedback');
-            const score = Math.round((correct / total) * 100);
-            sectionScores.graus = score;
+            
+            // Calcular pontos (15 pontos total, ~2.5 por resposta)
+            const pontosGraus = Math.round((correct / total) * 15);
+            sectionScores.graus = pontosGraus;
             
             if (correct === total) {
                 feedback.className = 'feedback success';
-                feedback.textContent = `🎉 Perfeito! Acertaste todos! Pontuação: ${score}/100`;
-                updateScore(15);
+                feedback.textContent = `🎉 Perfeito! Acertaste todos! ${pontosGraus}/15 pontos`;
             } else {
                 feedback.className = 'feedback error';
-                feedback.textContent = `Acertaste ${correct} de ${total}. Tenta novamente! Pontuação: ${score}/100`;
+                feedback.textContent = `Acertaste ${correct} de ${total}. ${pontosGraus}/15 pontos`;
             }
             feedback.style.display = 'block';
+            
+            updateScore();
         }
 
-        // Verificação dos Conectores
+        // Verificação dos Conectores (10 pontos - automático)
         function checkConectores() {
             const correctAnswers = {
                 con1: 'mas',
@@ -1195,13 +1369,14 @@
                     const value = selected.value;
                     studentAnswers.conectores[id] = value;
                     
-                    // Destacar a opção selecionada
-                    const label = selected.parentElement;
-                    const allLabels = document.querySelectorAll(`input[name="${id}"]`).forEach(radio => {
+                    // Limpar estilos anteriores
+                    document.querySelectorAll(`input[name="${id}"]`).forEach(radio => {
                         radio.parentElement.style.background = '';
                         radio.parentElement.style.fontWeight = '';
+                        radio.parentElement.style.borderLeft = '';
                     });
                     
+                    const label = selected.parentElement;
                     if (value === correctAnswers[id]) {
                         label.style.background = '#e8f5e9';
                         label.style.fontWeight = 'bold';
@@ -1216,147 +1391,34 @@
             }
 
             const feedback = document.getElementById('conectoresFeedback');
-            const score = Math.round((correct / total) * 100);
-            sectionScores.conectores = score;
+            
+            // Calcular pontos (10 pontos total, 2 por resposta)
+            const pontosConectores = correct * 2;
+            sectionScores.conectores = pontosConectores;
             
             if (correct === total) {
                 feedback.className = 'feedback success';
-                feedback.textContent = `🎉 Excelente! Conheces bem os conectores! Pontuação: ${score}/100`;
-                updateScore(15);
+                feedback.textContent = `🎉 Excelente! Conheces bem os conectores! ${pontosConectores}/10 pontos`;
             } else {
                 feedback.className = 'feedback error';
-                feedback.textContent = `Acertaste ${correct} de ${total}. Revê os conectores! Pontuação: ${score}/100`;
+                feedback.textContent = `Acertaste ${correct} de ${total}. ${pontosConectores}/10 pontos`;
             }
             feedback.style.display = 'block';
-        }
-
-        // Verificação da Flexão
-        function checkFlexao() {
-            const answers = {
-                fem1: ['a jovem bela', 'jovem bela'],
-                fem2: ['a deusa poderosa', 'deusa poderosa'],
-                fem3: ['a profetisa sábia', 'profetisa sábia'],
-                plur1: ['as ninfas generosas', 'ninfas generosas'],
-                plur2: ['os lagos transparentes', 'lagos transparentes'],
-                plur3: ['as flores perfumadas', 'flores perfumadas']
-            };
-
-            let correct = 0;
-            let total = Object.keys(answers).length;
-
-            for (let id in answers) {
-                const input = document.getElementById(id);
-                const value = input.value.trim().toLowerCase();
-                studentAnswers.flexao[id] = value;
-                
-                if (answers[id].some(answer => value === answer.toLowerCase())) {
-                    input.style.borderColor = '#4caf50';
-                    correct++;
-                } else if (value !== '') {
-                    input.style.borderColor = '#f44336';
-                }
-            }
-
-            const feedback = document.getElementById('flexaoFeedback');
-            const score = Math.round((correct / total) * 100);
-            sectionScores.flexao = score;
             
-            if (correct === total) {
-                feedback.className = 'feedback success';
-                feedback.textContent = `🎉 Perfeito! Conheces muito bem a flexão! Pontuação: ${score}/100`;
-                updateScore(15);
-            } else {
-                feedback.className = 'feedback error';
-                feedback.textContent = `Acertaste ${correct} de ${total}. Revê as regras! Pontuação: ${score}/100`;
-            }
-            feedback.style.display = 'block';
+            updateScore();
         }
 
-        // Verificação da Família de Palavras
-        function checkFamilia() {
-            const answers = {
-                fam1: ['embelezar', 'embelezamento', 'aformosear'],
-                fam2: ['belíssimo', 'beleza', 'formoso'],
-                fam3: ['apaixonar', 'amar', 'enamorar'],
-                fam4: ['amorosamente', 'apaixonado', 'amado'],
-                fam5: ['aguaceiro', 'aguarela', 'aquoso'],
-                fam6: ['aguarela', 'aguaceiro', 'aquário'],
-                fam7: ['floresta', 'florido', 'florescer'],
-                fam8: ['florido', 'floresta', 'floral']
-            };
-
-            let correct = 0;
-            let total = Object.keys(answers).length;
-
-            for (let id in answers) {
-                const input = document.getElementById(id);
-                const value = input.value.trim().toLowerCase();
-                studentAnswers.familia[id] = value;
-                
-                if (answers[id].some(answer => value.includes(answer.toLowerCase()))) {
-                    input.style.borderColor = '#4caf50';
-                    correct++;
-                } else if (value !== '') {
-                    input.style.borderColor = '#f44336';
-                }
-            }
-
-            const feedback = document.getElementById('familiaFeedback');
-            const score = Math.round((correct / total) * 100);
-            sectionScores.familia = score;
-            
-            if (correct >= total * 0.75) {
-                feedback.className = 'feedback success';
-                feedback.textContent = `🎉 Muito bem! Conheces bem as famílias de palavras! Pontuação: ${score}/100`;
-                updateScore(15);
-            } else {
-                feedback.className = 'feedback error';
-                feedback.textContent = `Acertaste ${correct} de ${total}. Pensa em mais palavras! Pontuação: ${score}/100`;
-            }
-            feedback.style.display = 'block';
-        }
-
-        // Guardar Frases
-        function saveFrases() {
-            studentAnswers.frases = {
-                frase1: document.getElementById('frase1').value,
-                frase2: document.getElementById('frase2').value,
-                frase3: document.getElementById('frase3').value
-            };
-            
-            const feedback = document.getElementById('frasesFeedback');
-            feedback.style.display = 'block';
-            updateScore(10);
-            setTimeout(() => {
-                feedback.style.display = 'none';
-            }, 3000);
-        }
-
-        // Guardar Conotativos
-        function saveConotativos() {
-            studentAnswers.conotativos = {
-                conot1: document.getElementById('conot1').value,
-                conot2: document.getElementById('conot2').value,
-                conot3: document.getElementById('conot3').value
-            };
-            
-            const feedback = document.getElementById('conotativosFeedback');
-            feedback.style.display = 'block';
-            updateScore(10);
-            setTimeout(() => {
-                feedback.style.display = 'none';
-            }, 3000);
-        }
-
-        // Atualizar pontuação
-        function updateScore(points) {
-            totalScore += points;
-            if (totalScore > 100) totalScore = 100;
+        // Atualizar pontuação total (só automática)
+        function updateScore() {
+            totalScore = sectionScores.graus + sectionScores.conectores;
             document.getElementById('totalScore').textContent = totalScore;
         }
 
         // ===== RELATÓRIO FINAL =====
         function finalizarTeste() {
+            // Guardar todas as respostas antes de finalizar
+            guardarTodasRespostas();
+            
             showSection('relatorioFinal');
             
             // Atualizar cabeçalho
@@ -1365,88 +1427,43 @@
             document.getElementById('reportData').textContent = new Date().toLocaleDateString('pt-PT');
             document.getElementById('reportTotalScore').textContent = totalScore;
             
-            // Atualizar tabela de desempenho
-            updateReportTable();
-            
-            // Análise do desempenho
-            analyzePerformance();
+            // Atualizar tabela
+            document.getElementById('reportGraus').textContent = sectionScores.graus + '/15';
+            document.getElementById('reportConectores').textContent = sectionScores.conectores + '/10';
         }
 
-        function updateReportTable() {
-            const sections = ['relatorio', 'graus', 'conectores', 'flexao', 'familia'];
-            
-            sections.forEach(section => {
-                const score = sectionScores[section];
-                const scoreCell = document.getElementById('report' + section.charAt(0).toUpperCase() + section.slice(1));
-                const statusCell = document.getElementById('status' + section.charAt(0).toUpperCase() + section.slice(1));
-                
-                scoreCell.textContent = score > 0 ? score + '/100' : '-';
-                
-                if (score >= 70) {
-                    statusCell.textContent = '✓ Bom';
-                    statusCell.style.color = '#4caf50';
-                } else if (score > 0) {
-                    statusCell.textContent = '⚠ A melhorar';
-                    statusCell.style.color = '#ff9800';
-                } else {
-                    statusCell.textContent = '-';
-                    statusCell.style.color = '#666';
-                }
+        function guardarTodasRespostas() {
+            // Guardar relatório
+            ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) studentAnswers.relatorio[id] = el.value.trim();
             });
-        }
-
-        function analyzePerformance() {
-            let pontosFortes = [];
-            let areasmelhorar = [];
             
-            const sectionNames = {
-                relatorio: 'Relatório do Texto',
-                graus: 'Graus dos Adjetivos',
-                conectores: 'Conectores Discursivos',
-                flexao: 'Flexão em Género e Número',
-                familia: 'Família de Palavras'
+            // Guardar flexão
+            ['fem1', 'fem2', 'fem3', 'plur1', 'plur2', 'plur3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) studentAnswers.flexao[id] = el.value.trim();
+            });
+            
+            // Guardar família
+            ['fam1', 'fam2', 'fam3', 'fam4', 'fam5', 'fam6', 'fam7', 'fam8'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) studentAnswers.familia[id] = el.value.trim();
+            });
+            
+            // Guardar frases
+            studentAnswers.frases = {
+                frase1: document.getElementById('frase1')?.value.trim() || '',
+                frase2: document.getElementById('frase2')?.value.trim() || '',
+                frase3: document.getElementById('frase3')?.value.trim() || ''
             };
             
-            for (let section in sectionScores) {
-                if (sectionScores[section] >= 70) {
-                    pontosFortes.push(sectionNames[section]);
-                } else if (sectionScores[section] > 0) {
-                    areasmelhorar.push(sectionNames[section]);
-                }
-            }
-            
-            // Mostrar pontos fortes
-            let htmlFortes = '<h4 style="color: #4caf50; margin-top: 15px;">✅ Pontos Fortes:</h4><ul style="margin-left: 20px;">';
-            if (pontosFortes.length > 0) {
-                pontosFortes.forEach(p => htmlFortes += `<li>${p}</li>`);
-            } else {
-                htmlFortes += '<li>Continua a praticar para melhorar!</li>';
-            }
-            htmlFortes += '</ul>';
-            document.getElementById('pontosFortes').innerHTML = htmlFortes;
-            
-            // Mostrar áreas a melhorar
-            let htmlMelhorar = '<h4 style="color: #ff9800; margin-top: 15px;">📚 Áreas a Melhorar:</h4><ul style="margin-left: 20px;">';
-            if (areasmelhorar.length > 0) {
-                areasmelhorar.forEach(a => htmlMelhorar += `<li>${a}</li>`);
-            } else {
-                htmlMelhorar += '<li>Parabéns! Demonstraste bom domínio em todas as áreas!</li>';
-            }
-            htmlMelhorar += '</ul>';
-            document.getElementById('areasmelhorar').innerHTML = htmlMelhorar;
-            
-            // Comentário final
-            let comentario = '';
-            if (totalScore >= 80) {
-                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Excelente trabalho! Demonstraste um domínio muito bom dos conteúdos gramaticais. Continua assim! 🌟</p>';
-            } else if (totalScore >= 60) {
-                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Bom trabalho! Tens um bom conhecimento dos conteúdos. Continua a praticar as áreas que ainda precisam de reforço. 💪</p>';
-            } else if (totalScore >= 40) {
-                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Fizeste um esforço! Algumas áreas precisam de mais atenção. Não desistas, com prática vais melhorar! 📖</p>';
-            } else {
-                comentario = '<h4 style="color: #2E5090; margin-top: 15px;">💬 Comentário Final:</h4><p>Precisas de praticar mais estes conteúdos. Pede ajuda ao professor e dedica mais tempo ao estudo. Vais conseguir! 💡</p>';
-            }
-            document.getElementById('comentarioFinal').innerHTML = comentario;
+            // Guardar conotativos
+            studentAnswers.conotativos = {
+                conot1: document.getElementById('conot1')?.value.trim() || '',
+                conot2: document.getElementById('conot2')?.value.trim() || '',
+                conot3: document.getElementById('conot3')?.value.trim() || ''
+            };
         }
 
         // ===== ENVIAR RESULTADOS PARA FIREBASE =====
@@ -1465,32 +1482,12 @@
                     dataFim: new Date().toISOString()
                 },
                 pontuacoes: {
-                    total: totalScore,
-                    porSeccao: sectionScores
+                    automatico: totalScore,
+                    graus: sectionScores.graus,
+                    conectores: sectionScores.conectores
                 },
-                respostas: studentAnswers,
-                analise: {
-                    pontosFortes: [],
-                    areasmelhorar: []
-                }
+                respostas: studentAnswers
             };
-            
-            // Adicionar análise
-            const sectionNames = {
-                relatorio: 'Relatório do Texto',
-                graus: 'Graus dos Adjetivos',
-                conectores: 'Conectores Discursivos',
-                flexao: 'Flexão em Género e Número',
-                familia: 'Família de Palavras'
-            };
-            
-            for (let section in sectionScores) {
-                if (sectionScores[section] >= 70) {
-                    resultData.analise.pontosFortes.push(sectionNames[section]);
-                } else if (sectionScores[section] > 0) {
-                    resultData.analise.areasmelhorar.push(sectionNames[section]);
-                }
-            }
             
             // Enviar para Firebase
             const testesRef = database.ref('testes-narciso');
@@ -1499,7 +1496,7 @@
             novoTesteRef.set(resultData)
                 .then(() => {
                     feedback.className = 'feedback success';
-                    feedback.textContent = '✅ Resultados enviados com sucesso! O teu professor já pode ver o teu trabalho.';
+                    feedback.textContent = '✅ Resultados enviados com sucesso! O teu professor já pode ver e corrigir o teu trabalho.';
                 })
                 .catch((error) => {
                     feedback.className = 'feedback error';
